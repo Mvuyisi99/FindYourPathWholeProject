@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="MentorDashboardStyleSheet.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
 <body>
 <div class="app-layout">
@@ -28,7 +29,7 @@
         <ul>
             <li class="active" data-nav="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
             <li data-nav="users"><i class="fas fa-users"></i> Users</li>
-            <li data-nav="booking"><i class="far fa-calendar-alt"></i> Booking</li>
+            <li data-nav="booking"><i class="far fa-calendar-alt"></i> Bookings</li>
             <li data-nav="mentors"><i class="fas fa-user-friends"></i> Mentors</li>
             <li data-nav="sessions"><i class="fas fa-video"></i> Sessions</li>
             <li data-nav="messages"><i class="far fa-comment-dots"></i> Messages</li>
@@ -74,7 +75,7 @@
 
                     <div class="dropdown-menu" id="dropdownMenu">
                         <a href="#"><i class="fas fa-user"></i> My Profile</a>
-                        <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="Settings.html"><i class="fas fa-cog"></i> Settings</a>
                         <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log out</a>
                     </div>
                 </div>
@@ -82,9 +83,260 @@
         </header>
 
         <main class="page-content">
+            <div class="heading">
+                <h1 id="welcomeTitle">Overview</h1>
+            </div>
+            <div class="stats-container">
 
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <div class="stat-icon-circle green">
+                            <i class="fas fa-user-friends"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-number">1,248</div>
+                            <div class="stat-label">Total students</div>
+                        </div>
+                    </div>
+                    <div class="stat-trend up">
+                        <i class="fas fa-arrow-up"></i> 12% this month
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <div class="stat-icon-circle purple">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-number">86</div>
+                            <div class="stat-label">Active Mentors</div>
+                        </div>
+                    </div>
+                    <div class="stat-trend up">
+                        <i class="fas fa-arrow-up"></i> 8% this month
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <div class="stat-icon-circle blue">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-number">324</div>
+                            <div class="stat-label">Total Sessions</div>
+                        </div>
+                    </div>
+                    <div class="stat-trend up">
+                        <i class="fas fa-arrow-up"></i> 15% this month
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <div class="stat-icon-circle orange">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-number">42</div>
+                            <div class="stat-label">Pending Requests</div>
+                        </div>
+                    </div>
+                    <div class="stat-trend down">
+                        <i class="fas fa-arrow-down"></i> 15% this month
+                    </div>
+                </div>
+
+            </div>
+            <section class="activity-card">
+                <div class="activity-header">
+                    <h2>Platform Activity</h2>
+                    <select class="activity-select" id="activityRange">
+                        <option value="month">This Month</option>
+                        <option value="lastMonth">Last Month</option>
+                    </select>
+                </div>
+
+                <div class="activity-legend">
+                    <span><i class="legend-dot completed"></i> Completed</span>
+                    <span><i class="legend-dot scheduled"></i> Scheduled</span>
+                </div>
+
+                <div class="activity-chart-wrap">
+                    <canvas id="activityChart"></canvas>
+                </div>
+            </section>
+            <div class="schedule-card">
+                <div class="schedule-header">
+                    <h2>Upcoming Schedule</h2>
+                    <a href="#" class="view-calendar">View Calendar</a>
+                </div>
+                <div class="schedule-list">
+                    <div class="schedule-item">
+                        <div class="date-box green">
+                            <span class="day">08</span>
+                            <span class="month">May</span>
+                        </div>
+                        <div class="schedule-info">
+                            <div class="title">Career Guidance Session</div>
+                            <div class="mentor">Lerato Dlamini</div>
+                            <div class="time">10:00AM - 11:00 AM</div>
+                        </div>
+                        <div class="status online">• Online</div>
+                    </div>
+                    <div class = "horizontal-divider"> </div>
+                    <div class="schedule-item">
+                        <div class="date-box gray">
+                            <span class="day">08</span>
+                            <span class="month">May</span>
+                        </div>
+                        <div class="schedule-info">
+                            <div class="title">CV & Career Advice</div>
+                            <div class="mentor">Sipho Khumalo</div>
+                            <div class="time">11:30 AM - 12:30 AM</div>
+                        </div>
+                        <div class="status online">• Online</div>
+                    </div>
+                    <div class = "horizontal-divider"> </div>
+                    <div class="schedule-item">
+                        <div class="date-box orange">
+                            <span class="day">09</span>
+                            <span class="month">May</span>
+                        </div>
+                        <div class="schedule-info">
+                            <div class="title">University Guidance</div>
+                            <div class="mentor">Aaliyah Jacobs</div>
+                            <div class="time">02:00AM - 03:00 AM</div>
+                        </div>
+                        <div class="status online">• Online</div>
+                    </div>
+                    <div class = "horizontal-divider"> </div>
+                    <div class="schedule-item">
+                        <div class="date-box red">
+                            <span class="day">09</span>
+                            <span class="month">May</span>
+                        </div>
+                        <div class="schedule-info">
+                            <div class="title">Career Change Advice</div>
+                            <div class="mentor">Thabiso Nkosi</div>
+                            <div class="time">03:30 AM - 04:30 AM</div>
+                        </div>
+                        <div class="status online">• Online</div>
+                    </div>
+                </div>
+                <button class="go-calendar-btn">Go to Calendar</button>
+            </div>
         </main>
     </div>
 </div>
+<script src="bookings.js"></script>
+<script>
+    initMentorNav();
+    const profileBtn = document.getElementById('profileBtn');
+    const dropdown = document.getElementById('dropdownMenu');
+
+    profileBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle('show');
+    });
+
+    /*  PLATFORM ACTIVITY CHART */
+    const activityData = {
+        month: {
+            completed: [20, 27, 39, 23, 22],
+            scheduled: [12, 18, 25, 14, 13]
+        },
+        lastMonth: {   // sample numbers, replace with real data
+            completed: [15, 22, 30, 28, 19],
+            scheduled: [10, 14, 20, 17, 11]
+        }
+    };
+
+    // Draws the value above each point, like in the design
+    const valueLabels = {
+        id: 'valueLabels',
+        afterDatasetsDraw(chart) {
+            const { ctx } = chart;
+            chart.data.datasets.forEach((ds, i) => {
+                chart.getDatasetMeta(i).data.forEach((point, idx) => {
+                    ctx.save();
+                    ctx.font = '600 13px Montserrat, sans-serif';
+                    ctx.fillStyle = ds.borderColor;
+                    ctx.textAlign = 'center';
+                    ctx.fillText(ds.data[idx], point.x, point.y - 12);
+                    ctx.restore();
+                });
+            });
+        }
+    };
+
+    function areaGradient(chart, rgb) {
+        const { ctx, chartArea } = chart;
+        if (!chartArea) return 'transparent';
+        const g = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+        g.addColorStop(0, `rgba(${rgb}, 0.15)`);
+        g.addColorStop(1, `rgba(${rgb}, 0)`);
+        return g;
+    }
+
+    const activityChart = new Chart(document.getElementById('activityChart'), {
+        type: 'line',
+        data: {
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'],
+            datasets: [
+                {
+                    label: 'Completed',
+                    data: activityData.month.completed,
+                    borderColor: '#22b04b',
+                    backgroundColor: (c) => areaGradient(c.chart, '34, 176, 75'),
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 2,
+                    pointRadius: 5,
+                    pointBackgroundColor: '#22b04b'
+                },
+                {
+                    label: 'Scheduled',
+                    data: activityData.month.scheduled,
+                    borderColor: '#1a6bff',
+                    backgroundColor: (c) => areaGradient(c.chart, '26, 107, 255'),
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 2,
+                    pointRadius: 5,
+                    pointBackgroundColor: '#1a6bff'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            layout: { padding: { top: 20 } },
+            plugins: { legend: { display: false }, tooltip: { enabled: true } },
+            scales: {
+                y: {
+                    min: 0,
+                    suggestedMax: 42,
+                    ticks: { stepSize: 10, color: '#0f172a', font: { size: 13, weight: 600 } },
+                    grid: { color: '#e2e8f0' },
+                    border: { display: false, dash: [4, 4] }
+                },
+                x: {
+                    ticks: { color: '#0f172a', font: { size: 13, weight: 600 } },
+                    grid: { display: false }
+                }
+            }
+        },
+        plugins: [valueLabels]
+    });
+
+    document.getElementById('activityRange').addEventListener('change', (e) => {
+        const d = activityData[e.target.value];
+        activityChart.data.datasets[0].data = d.completed;
+        activityChart.data.datasets[1].data = d.scheduled;
+        activityChart.update();
+    });
+</script>
 </body>
 </html>

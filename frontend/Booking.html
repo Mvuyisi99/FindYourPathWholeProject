@@ -100,9 +100,9 @@
 			</div>
 			<div class="card-info">
 				<h2>Aron Smith</h2>
-				<p>11:00am - 12:00pm</p>
+				<p>Data Analyst | Standard  Bank</p>
 			</div>
-			<a href="profile.html" class="btn3">Cancel</a>
+			<a href="profile.html" class="btn3">Book</a>
 		</div>
 		<div class ="bottom-card3">
 			<div class ="imgBx">
@@ -122,9 +122,9 @@
 			</div>
 			<div class="card-info">
 				<h2>Aaliya Bilal</h2>
-				<p>13:00pm - 15:00pm</p>
+				<p>Coach | UWC women soccer coach</p>
 			</div>
-			<a href="profile.html" class="btn2">Cancel</a>
+			<a href="profile.html" class="btn2">Book</a>
 		</div>
 		<div class ="bottom-card5">
 			<div class ="imgBx">
@@ -132,7 +132,7 @@
 				<a href="#"><img class="profile2" src="Ellipse 9.png"></a>
 			</div>
 			<div class="card-info">
-				<h2>Klyan Shane</h2>
+				<h2>Kylan Shane</h2>
 				<p>Software Developer | Durban </p>
 
 			</div>
@@ -152,7 +152,12 @@
 	</div>
 
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabaseClient.js"></script>
+<script src="bookings.js"></script>
 <script>
+
+	initStudentBookingButtons();
 
 	const profileBtn = document.getElementById('profileBtn');
 	const dropdown = document.getElementById('dropdownMenu');
@@ -179,7 +184,6 @@
 			window.location.href = destination;
 		});
 	});
-	// Sidebar navigation
 	document.querySelectorAll('.sidebar li').forEach(item => {
 		item.addEventListener('click', () => {
 			const navItem = item.dataset.nav;
@@ -216,9 +220,7 @@
 			}
 		});
 	});
-
 </script>
-
 </body>
 </html>				
 	

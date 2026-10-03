@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Booking Details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="MentorDashboardStyleSheet.css">
+    <link rel="stylesheet" href="MentorBookingsStyleSheet.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="logo-area" onclick="window.location.href='MentorDashboard.html'">
+            <img src="PROJECT 3 LOGO 2  3.png" alt="logo" class="logo-img" onerror="this.src='https://via.placeholder.com/38x38?text=FP'">
+            <div class="logo-text">Find<span class="green">Your</span>Path</div>
+        </div>
+
+        <div class="admin-card">
+            <img src="Polygon 1.png" alt="Admin" class="admin-avatar">
+            <div>
+                <div class="admin-name">Ms. Emily Thompson</div>
+                <div class="admin-role">Administrator</div>
+                <div class="admin-status"><span class="dot"></span> Online</div>
+            </div>
+        </div>
+
+        <ul>
+            <li data-nav="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
+            <li data-nav="users"><i class="fas fa-users"></i> Users</li>
+            <li class="active" data-nav="booking"><i class="far fa-calendar-alt"></i> Bookings</li>
+            <li data-nav="mentors"><i class="fas fa-user-friends"></i> Mentors</li>
+            <li data-nav="sessions"><i class="fas fa-video"></i> Sessions</li>
+            <li data-nav="messages"><i class="far fa-comment-dots"></i> Messages</li>
+            <li data-nav="career"><i class="fas fa-briefcase"></i> Career Explorer</li>
+            <li data-nav="reports"><i class="fas fa-chart-line"></i> Report & Analytics</li>
+            <li data-nav="announcements"><i class="fas fa-bell"></i> Announcements</li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <div class="promo-card">
+                <img src="PROJECT 3 LOGO.png" alt="Promo" class="promo-img">
+                <div class="promo-text">
+                    Real guidance.<br>Local mentors.<br>Brighter futures.
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <div class="main-area">
+        <header class="top-bar">
+            <div class="welcome-block">
+                <h1>Booking details</h1>
+                <p>Set the time and details, then confirm or decline.</p>
+            </div>
+            <div class="top-bar-right">
+                <div class="profile-preview">
+                    <img src="Polygon 1.png" alt="profile">
+                    <div class="info"><div class="name">Administrator</div></div>
+                </div>
+            </div>
+        </header>
+
+        <main class="page-content">
+            <a href="MentorBookings.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to bookings</a>
+
+            <div id="notFound" class="empty-state" style="display:none;">
+                This booking could not be found. Go back to the list and choose another one.
+            </div>
+
+            <div class="details-layout" id="detailsLayout" style="display:none;">
+                <section class="details-card">
+                    <div class="details-student">
+                        <div class="booking-avatar large" id="dAvatar"></div>
+                        <div>
+                            <h2 id="dStudent"></h2>
+                            <p id="dMentor"></p>
+                        </div>
+                        <span class="status-badge" id="dStatus"></span>
+                    </div>
+                    <dl class="details-facts">
+                        <dt>Requested on</dt><dd id="dRequested"></dd>
+                        <dt>Student's message</dt><dd id="dMessage"></dd>
+                    </dl>
+                </section>
+
+                <form class="details-card" id="bookingForm" novalidate>
+                    <h2>Session details</h2>
+
+                    <div class="form-row">
+                        <label for="fDate">Date</label>
+                        <input type="date" id="fDate" required>
+                    </div>
+
+                    <div class="form-row two">
+                        <div>
+                            <label for="fStart">Start time</label>
+                            <input type="time" id="fStart" required>
+                        </div>
+                        <div>
+                            <label for="fEnd">End time</label>
+                            <input type="time" id="fEnd" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="fType">Session type</label>
+                        <select id="fType">
+                            <option value="Online">Online</option>
+                            <option value="In person">In person</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="fLocation" id="fLocationLabel">Meeting link</label>
+                        <input type="text" id="fLocation" placeholder="Paste the Microsoft Teams link">
+                    </div>
+
+                    <div class="form-row">
+                        <label for="fNotes">Note to the student</label>
+                        <textarea id="fNotes" rows="4" placeholder="What should they prepare or bring?"></textarea>
+                    </div>
+
+                    <p class="form-error" id="formError" role="alert"></p>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-decline" id="declineBtn">Decline</button>
+                        <button type="submit" class="btn-confirm" id="confirmBtn">Confirm booking</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabaseClient.js"></script>
+<script src="bookings.js"></script>
+<script>
+    initMentorNav();
+
+    const $ = x => document.getElementById(x);
+    const id = new URLSearchParams(window.location.search).get('id');
+
+    (async function () {
+        let booking = null;
+        try {
+            booking = id ? await BookingStore.get(id) : null;
+        } catch (err) {
+            console.error(err);
+        }
+
+        if (!booking) {
+            $('notFound').style.display = 'block';
+            return;
+        }
+        $('detailsLayout').style.display = 'grid';
+
+        $('dAvatar').textContent = booking.student_name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+        $('dStudent').textContent = booking.student_name;
+        $('dMentor').textContent = 'Wants to book ' + booking.mentor_name + ' (' + (booking.mentor_detail || '') + ')';
+        $('dRequested').textContent = new Date(booking.created_at).toLocaleString('en-ZA', { dateStyle: 'medium', timeStyle: 'short' });
+        $('dMessage').textContent = booking.message || 'No message.';
+
+        function showStatus(s) {
+            $('dStatus').className = 'status-badge ' + s;
+            $('dStatus').textContent = s[0].toUpperCase() + s.slice(1);
+        }
+        showStatus(booking.status);
+
+        // Today as the earliest date, in local time
+        const now = new Date();
+        $('fDate').min = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+
+        // Pre-fill if the mentor already scheduled this booking
+        if (booking.status === 'confirmed') {
+            $('fDate').value = booking.session_date;
+            $('fStart').value = booking.start_time.slice(0, 5);
+            $('fEnd').value = booking.end_time.slice(0, 5);
+            $('fType').value = booking.session_type;
+            $('fLocation').value = booking.location || '';
+            $('fNotes').value = booking.notes || '';
+            $('confirmBtn').textContent = 'Update booking';
+        }
+
+        function syncLocationField() {
+            const online = $('fType').value === 'Online';
+            $('fLocationLabel').textContent = online ? 'Meeting link' : 'Venue';
+            $('fLocation').placeholder = online ? 'Paste the Microsoft Teams link' : 'Where will you meet?';
+        }
+        $('fType').addEventListener('change', syncLocationField);
+        syncLocationField();
+
+        function setBusy(busy) {
+            $('confirmBtn').disabled = busy;
+            $('declineBtn').disabled = busy;
+        }
+
+        $('bookingForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const err = $('formError');
+            err.textContent = '';
+
+            if (!$('fDate').value || !$('fStart').value || !$('fEnd').value) {
+                err.textContent = 'Choose a date, start time and end time.';
+                return;
+            }
+            if ($('fDate').value < $('fDate').min) {
+                err.textContent = 'The date cannot be in the past.';
+                return;
+            }
+            if ($('fEnd').value <= $('fStart').value) {
+                err.textContent = 'The end time must be after the start time.';
+                return;
+            }
+
+            setBusy(true);
+            try {
+                await BookingStore.update(id, {
+                    status: 'confirmed',
+                    session_date: $('fDate').value,
+                    start_time: $('fStart').value,
+                    end_time: $('fEnd').value,
+                    session_type: $('fType').value,
+                    location: $('fLocation').value.trim() || null,
+                    notes: $('fNotes').value.trim() || null
+                });
+                window.location.href = 'MentorBookings.html';
+            } catch (ex) {
+                console.error(ex);
+                err.textContent = 'Could not save the booking. Please try again.';
+                setBusy(false);
+            }
+        });
+
+        $('declineBtn').addEventListener('click', async () => {
+            if (!confirm('Decline this booking request?')) return;
+            setBusy(true);
+            try {
+                await BookingStore.update(id, { status: 'declined', notes: $('fNotes').value.trim() || null });
+                window.location.href = 'MentorBookings.html';
+            } catch (ex) {
+                console.error(ex);
+                $('formError').textContent = 'Could not decline the booking. Please try again.';
+                setBusy(false);
+            }
+        });
+    })();
+</script>
+</body>
+</html>

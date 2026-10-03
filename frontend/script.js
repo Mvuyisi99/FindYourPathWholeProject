@@ -56,13 +56,14 @@ if (registerForm) {
 
         if (role === 'Mentor') {
             window.location.href = 'MentorDashboard.html';
+
         } else {
             window.location.href = 'Dashboard.html';
         }
+
     });
 }
 
-// Login
 const loginForm = document.getElementById('loginForm');
 const loginLink = document.getElementById('toggle-login-link');
 const modal = document.getElementById('login-modal');
@@ -135,7 +136,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const careerSearchInput = document.getElementById('careerFilter');
     const sidebarMenuItems = document.querySelectorAll('.side-menu li');
 
-    // Only runs on pages that have the career list
     if (careerListItems.length && dynamicTitle) {
         careerListItems.forEach(item => {
             item.addEventListener('click', () => {
@@ -146,7 +146,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Only runs if search input exists
     if (careerSearchInput) {
         careerSearchInput.addEventListener('input', (e) => {
             const searchTerm = e.target.value.toLowerCase();

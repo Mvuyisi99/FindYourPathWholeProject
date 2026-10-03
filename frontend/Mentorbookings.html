@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Mentor Bookings</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="MentorDashboardStyleSheet.css">
+    <link rel="stylesheet" href="MentorBookingsStyleSheet.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="logo-area" onclick="window.location.href='MentorDashboard.html'">
+            <img src="PROJECT 3 LOGO 2  3.png" alt="logo" class="logo-img" onerror="this.src='https://via.placeholder.com/38x38?text=FP'">
+            <div class="logo-text">Find<span class="green">Your</span>Path</div>
+        </div>
+
+        <div class="admin-card">
+            <img src="Polygon 1.png" alt="Admin" class="admin-avatar">
+            <div>
+                <div class="admin-name">Ms. Emily Thompson</div>
+                <div class="admin-role">Administrator</div>
+                <div class="admin-status"><span class="dot"></span> Online</div>
+            </div>
+        </div>
+
+        <ul>
+            <li data-nav="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
+            <li data-nav="users"><i class="fas fa-users"></i> Users</li>
+            <li class="active" data-nav="booking"><i class="far fa-calendar-alt"></i> Bookings</li>
+            <li data-nav="mentors"><i class="fas fa-user-friends"></i> Mentors</li>
+            <li data-nav="sessions"><i class="fas fa-video"></i> Sessions</li>
+            <li data-nav="messages"><i class="far fa-comment-dots"></i> Messages</li>
+            <li data-nav="career"><i class="fas fa-briefcase"></i> Career Explorer</li>
+            <li data-nav="reports"><i class="fas fa-chart-line"></i> Report & Analytics</li>
+            <li data-nav="announcements"><i class="fas fa-bell"></i> Announcements</li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <div class="promo-card">
+                <img src="PROJECT 3 LOGO.png" alt="Promo" class="promo-img">
+                <div class="promo-text">
+                    Real guidance.<br>Local mentors.<br>Brighter futures.
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <div class="main-area">
+        <header class="top-bar">
+            <div class="welcome-block">
+                <h1>Bookings</h1>
+                <p>Students who asked to book a session with you.</p>
+            </div>
+            <div class="top-bar-right">
+                <div class="profile-preview" id="profileBtn">
+                    <img src="Polygon 1.png" alt="profile">
+                    <div class="info"><div class="name">Administrator</div></div>
+                </div>
+            </div>
+        </header>
+
+        <main class="page-content">
+            <div class="booking-filters" id="filters">
+                <button class="filter-btn active" data-filter="all">All <span id="countAll">0</span></button>
+                <button class="filter-btn" data-filter="pending">Pending <span id="countPending">0</span></button>
+                <button class="filter-btn" data-filter="confirmed">Confirmed <span id="countConfirmed">0</span></button>
+                <button class="filter-btn" data-filter="declined">Declined <span id="countDeclined">0</span></button>
+            </div>
+
+            <div class="booking-list" id="bookingList"></div>
+        </main>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabaseClient.js"></script>
+<script src="bookings.js"></script>
+<script>
+    initMentorNav();
+
+    let currentFilter = 'all';
+    let bookings = [];
+    const listEl = document.getElementById('bookingList');
+
+    function initials(name) {
+        return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    }
+
+    function formatSlot(b) {
+        if (b.status !== 'confirmed') return 'Not scheduled yet';
+        const d = new Date(b.session_date + 'T00:00');
+        const day = d.toLocaleDateString('en-ZA', { weekday: 'short', day: 'numeric', month: 'short' });
+        return day + ', ' + b.start_time.slice(0, 5) + ' - ' + b.end_time.slice(0, 5);
+    }
+
+    function showMessage(text) {
+        listEl.innerHTML = '';
+        const el = document.createElement('div');
+        el.className = 'empty-state';
+        el.textContent = text;
+        listEl.appendChild(el);
+    }
+
+    function render() {
+        ['all', 'pending', 'confirmed', 'declined'].forEach(s => {
+            const n = s === 'all' ? bookings.length : bookings.filter(b => b.status === s).length;
+            document.getElementById('count' + s[0].toUpperCase() + s.slice(1)).textContent = n;
+        });
+
+        const items = currentFilter === 'all' ? bookings : bookings.filter(b => b.status === currentFilter);
+
+        if (items.length === 0) {
+            showMessage(bookings.length === 0
+                ? 'No booking requests yet. When a student presses Book on your card, the request shows up here.'
+                : 'No ' + currentFilter + ' bookings.');
+            return;
+        }
+
+        listEl.innerHTML = '';
+        items.forEach(b => {
+            const row = document.createElement('a');
+            row.className = 'booking-row';
+            row.href = 'MentorBookingDetails.html?id=' + encodeURIComponent(b.id);
+
+            const avatar = document.createElement('div');
+            avatar.className = 'booking-avatar';
+            avatar.textContent = initials(b.student_name);
+
+            const info = document.createElement('div');
+            info.className = 'booking-info';
+            const name = document.createElement('div');
+            name.className = 'booking-student';
+            name.textContent = b.student_name;
+            const meta = document.createElement('div');
+            meta.className = 'booking-meta';
+            meta.textContent = b.message ? b.message : 'Wants to book a session with you';
+            const when = document.createElement('div');
+            when.className = 'booking-when';
+            when.textContent = formatSlot(b);
+            info.append(name, meta, when);
+
+            const side = document.createElement('div');
+            side.className = 'booking-side';
+            const badge = document.createElement('span');
+            badge.className = 'status-badge ' + b.status;
+            badge.textContent = b.status[0].toUpperCase() + b.status.slice(1);
+            const req = document.createElement('div');
+            req.className = 'booking-requested';
+            req.textContent = 'Requested ' + new Date(b.created_at).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' });
+            side.append(badge, req);
+
+            row.append(avatar, info, side);
+            listEl.appendChild(row);
+        });
+    }
+
+    async function load() {
+        try {
+            bookings = await BookingStore.forMentor();
+            render();
+        } catch (err) {
+            console.error(err);
+            showMessage('Could not load bookings. Check that you are signed in and that the bookings table exists.');
+        }
+    }
+
+    document.getElementById('filters').addEventListener('click', e => {
+        const btn = e.target.closest('.filter-btn');
+        if (!btn) return;
+        currentFilter = btn.dataset.filter;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b === btn));
+        render();
+    });
+
+    window.addEventListener('focus', load);
+    load();
+</script>
+</body>
+</html>
