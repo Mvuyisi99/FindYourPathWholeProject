@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Session Details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="BookingStyleSheet.css">
+    <link rel="stylesheet" href="DetailsStyleSheet.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<div class="top-nav">
+    <div class="logo-area" onclick="window.location.href='Dashboard.html'">
+        <img src="PROJECT.png" alt="logo" class="logo-img" onerror="this.src='https://via.placeholder.com/38x38?text=FP'">
+        <div class="logo-text">Find<span class="green">Your</span>Path</div>
+    </div>
+
+    <div class="nav-middle">
+        <a href="Dashboard.html" class="active"  data-page="home">Home</a>
+        <a href="Mentors.html" data-page="mentor">Find Mentor</a>
+        <a href="EncouragementWall.html" data-page="encouragement">Encouragement</a>
+        <a href="InformationTechnology.html" data-page="resources">Resources</a>
+    </div>
+
+    <div style="display: flex; gap: 16px; align-items: center;">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search mentor by name or role...">
+        <div class="right-actions">
+            <div class="icon-group">
+                <div class="icon-btn" id="notificationBtn">
+                    <i class="far fa-bell"></i>
+                    <span class="badge" id="notificationBadge">3</span>
+                </div>
+                <div class="icon-btn" id="messageBtn">
+                    <i class="far fa-comment-dots"></i>
+                </div>
+            </div>
+            <div class="divider-vertical"></div>
+            <div class="profile-preview" id="profileBtn">
+                <img id="profileAvatar" src="Polygon 1.png" alt="profile">
+                <div class="info">
+                    <div class="name" id="profileName">Student</div>
+                    <div class="role" id="profileRole">Student</div>
+                </div>
+                <span class="arrow-down"><i class="fas fa-chevron-down"></i></span>
+            </div>
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="#"><i class="fas fa-user"></i> My Profile</a>
+                <a href="Settings.html"><i class="fas fa-cog"></i> Settings</a>
+                <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log out</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main-layout">
+    <div class="sidebar">
+        <ul>
+            <li data-nav="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
+            <li data-nav="messages"><i class="far fa-envelope"></i> Messages</li>
+            <li class="active" data-nav="booking"><i class="far fa-calendar-alt"></i> Booking</li>
+            <li data-nav="mentors"><i class="fas fa-users"></i> Mentors</li>
+            <li data-nav="encouragement"><i class="fas fa-globe"></i> Encouragement Cards</li>
+            <li data-nav="experiances"><i class="fas fa-folder-open"></i> Experiances</li>
+            <li data-nav="settings"><i class="fas fa-cog"></i> Settings</li>
+            <li data-nav="help"><i class="far fa-question-circle"></i> Help & Support</li>
+            <li data-nav="logout"><i class="fas fa-sign-out-alt"></i> Log out</li>
+        </ul>
+
+        <div class="sidebar-footer" id="aboutFooter">
+            <img src="PROJECT.png" alt="logo" class="footer-logo" onerror="this.src='https://via.placeholder.com/80x80?text=FP'">
+            <div class="footer-text">
+                <strong>Real guidance.</strong>
+                <strong>Local mentors.</strong>
+                <strong>Brighter futures.</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="middle-layout">
+    <div class="session-details">
+        <a href="Dashboard.html" class="sd-back"><i class="fas fa-arrow-left"></i> Back to dashboard</a>
+
+        <div class="sd-empty" id="sdLoading">Loading your session...</div>
+        <div class="sd-empty" id="sdNotFound" style="display:none;">
+            This session could not be found. Go back to your dashboard and try again.
+        </div>
+
+        <div id="sdContent" style="display:none;">
+            <section class="sd-card sd-header">
+                <img id="sdAvatar" class="sd-avatar" alt="">
+                <div class="sd-who">
+                    <p class="sd-label">Session with</p>
+                    <h1 id="sdMentor"></h1>
+                    <p class="sd-sub" id="sdMentorDetail"></p>
+                </div>
+                <span class="sd-badge" id="sdStatus"></span>
+            </section>
+
+            <section class="sd-card">
+                <div class="sd-facts">
+                    <div class="sd-fact">
+                        <i class="far fa-calendar-alt"></i>
+                        <div>
+                            <p class="sd-label">Date</p>
+                            <p class="sd-value" id="sdDate"></p>
+                            <p class="sd-hint" id="sdWhen"></p>
+                        </div>
+                    </div>
+                    <div class="sd-fact">
+                        <i class="far fa-clock"></i>
+                        <div>
+                            <p class="sd-label">Time</p>
+                            <p class="sd-value" id="sdTime"></p>
+                            <p class="sd-hint" id="sdDuration"></p>
+                        </div>
+                    </div>
+                    <div class="sd-fact">
+                        <i class="fas fa-video" id="sdTypeIcon"></i>
+                        <div>
+                            <p class="sd-label">Session type</p>
+                            <p class="sd-value" id="sdType"></p>
+                        </div>
+                    </div>
+                    <div class="sd-fact">
+                        <i class="fas fa-link" id="sdPlaceIcon"></i>
+                        <div>
+                            <p class="sd-label" id="sdPlaceLabel">Meeting link</p>
+                            <p class="sd-value sd-break" id="sdPlace"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="sd-card" id="sdNotesCard" style="display:none;">
+                <p class="sd-label">Note from your mentor</p>
+                <p class="sd-notes" id="sdNotes"></p>
+            </section>
+
+            <div class="sd-actions">
+                <a href="#" class="sd-join" id="sdJoin" target="_blank" rel="noopener noreferrer" style="display:none;">
+                    <i class="fas fa-video"></i> Join session
+                </a>
+                <a href="Dashboard.html" class="sd-secondary">Back to dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabaseClient.js"></script>
+<script src="bookings.js"></script>
+<script>
+    const profileBtn = document.getElementById('profileBtn');
+    const dropdown = document.getElementById('dropdownMenu');
+
+    profileBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle('show');
+    });
+    document.addEventListener('click', () => dropdown.classList.remove('show'));
+
+    (function showSignedInUser() {
+        try {
+            const user = JSON.parse(localStorage.getItem('careerUser') || 'null');
+            if (!user) return;
+            const name = user.fullname || 'Student';
+            document.getElementById('profileName').textContent = name;
+            document.getElementById('profileRole').textContent = user.role || 'Student';
+            document.getElementById('profileAvatar').src = user.avatar ||
+                'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) + '&background=e2e8f0&color=64748b';
+        } catch (e) { /* keep the defaults */ }
+    })();
+
+    const navRoutes = {
+        dashboard: 'Dashboard.html',
+        messages: 'Messages.html',
+        booking: 'Booking.html',
+        mentors: 'Mentors.html',
+        encouragement: 'EncouragementWall.html',
+        experiances: 'ExperianceWall.html',
+        settings: 'Settings.html',
+        help: 'HelpAndSupport.html'
+    };
+    document.querySelectorAll('.sidebar li').forEach(item => {
+        item.addEventListener('click', () => {
+            const nav = item.dataset.nav;
+            if (nav === 'logout') {
+                if (confirm('Are you sure you want to log out?')) window.location.href = 'Home.html';
+            } else if (navRoutes[nav]) {
+                window.location.href = navRoutes[nav];
+            }
+        });
+    });
+
+    (async function () {
+        const $ = x => document.getElementById(x);
+        const id = new URLSearchParams(window.location.search).get('id');
+
+        function safeUrl(text) {
+            try {
+                const u = new URL(text);
+                return (u.protocol === 'http:' || u.protocol === 'https:') ? u.href : null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        let b = null;
+        try {
+            const user = await BookingStore.requireUser();
+            if (!user) return;
+            b = id ? await BookingStore.getForStudent(id) : null;
+        } catch (e) {
+            console.error(e);
+        }
+
+        $('sdLoading').style.display = 'none';
+        if (!b) {
+            $('sdNotFound').style.display = 'block';
+            return;
+        }
+        $('sdContent').style.display = 'block';
+
+        const fallback = initialsAvatar(b.mentor_name);
+        const photo = await mentorPhotoUrl(b.mentor_id);
+        const avatar = $('sdAvatar');
+        avatar.onerror = () => { avatar.onerror = null; avatar.src = fallback; };
+        avatar.src = photo || fallback;
+        avatar.alt = b.mentor_name;
+        $('sdMentor').textContent = b.mentor_name;
+        $('sdMentorDetail').textContent = b.mentor_detail || '';
+
+        const today = localToday();
+        const nowTime = new Date().toTimeString().slice(0, 8);
+        let label = { pending: 'Pending', confirmed: 'Confirmed', declined: 'Declined' }[b.status] || b.status;
+        let cls = b.status;
+        const scheduled = b.status === 'confirmed' && b.session_date;
+        if (scheduled && (b.session_date < today || (b.session_date === today && b.end_time <= nowTime))) {
+            label = 'Completed';
+            cls = 'completed';
+        }
+        $('sdStatus').textContent = label;
+        $('sdStatus').className = 'sd-badge ' + cls;
+
+        if (b.session_date) {
+            const d = new Date(b.session_date + 'T00:00');
+            $('sdDate').textContent = d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+            const t = new Date(today + 'T00:00');
+            const days = Math.round((d - t) / 86400000);
+            $('sdWhen').textContent = days === 0 ? 'Today'
+                : days === 1 ? 'Tomorrow'
+                    : days > 1 ? 'In ' + days + ' days'
+                        : days === -1 ? 'Yesterday'
+                            : Math.abs(days) + ' days ago';
+        } else {
+            $('sdDate').textContent = 'Not scheduled yet';
+        }
+
+        if (b.start_time && b.end_time) {
+            $('sdTime').textContent = to12h(b.start_time) + ' - ' + to12h(b.end_time);
+            $('sdDuration').textContent = minutesBetween(b.start_time, b.end_time) + ' min';
+        } else {
+            $('sdTime').textContent = 'Not scheduled yet';
+        }
+
+        const online = b.session_type !== 'In person';
+        $('sdType').textContent = b.session_type || 'Not set yet';
+        $('sdTypeIcon').className = online ? 'fas fa-video' : 'fas fa-user-friends';
+        $('sdPlaceLabel').textContent = online ? 'Meeting link' : 'Venue';
+        $('sdPlaceIcon').className = online ? 'fas fa-link' : 'fas fa-location-dot';
+
+        const url = online && b.location ? safeUrl(b.location) : null;
+        if (url) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            a.textContent = url;
+            $('sdPlace').appendChild(a);
+            $('sdJoin').href = url;
+            if (cls !== 'completed' && b.status === 'confirmed') $('sdJoin').style.display = 'inline-flex';
+        } else {
+            $('sdPlace').textContent = b.location || 'Your mentor has not added this yet';
+        }
+
+        if (b.notes) {
+            $('sdNotes').textContent = b.notes;
+            $('sdNotesCard').style.display = 'block';
+        }
+    })();
+</script>
+</body>
+</html>

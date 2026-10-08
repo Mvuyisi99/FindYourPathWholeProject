@@ -230,9 +230,12 @@
         </main>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabaseClient.js"></script>
 <script src="bookings.js"></script>
 <script>
     initMentorNav();
+    initMentorNotifications();
     const profileBtn = document.getElementById('profileBtn');
     const dropdown = document.getElementById('dropdownMenu');
 
@@ -241,19 +244,17 @@
         dropdown.classList.toggle('show');
     });
 
-    /*  PLATFORM ACTIVITY CHART */
     const activityData = {
         month: {
             completed: [20, 27, 39, 23, 22],
             scheduled: [12, 18, 25, 14, 13]
         },
-        lastMonth: {   // sample numbers, replace with real data
+        lastMonth: {
             completed: [15, 22, 30, 28, 19],
             scheduled: [10, 14, 20, 17, 11]
         }
     };
 
-    // Draws the value above each point, like in the design
     const valueLabels = {
         id: 'valueLabels',
         afterDatasetsDraw(chart) {

@@ -1,0 +1,211 @@
+/* Loads after BookingStyleSheet.css; everything is scoped to .session-details */
+
+.session-details {
+    padding: 8px 16px 24px;
+    max-width: 860px;
+    font-family: "Montserrat", sans-serif;
+}
+
+.sd-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #0f2744;
+    text-decoration: none;
+    margin-bottom: 18px;
+}
+
+.sd-back:hover {
+    color: #2e7d32;
+}
+
+.sd-card {
+    background: white;
+    border: 1px solid #f1f5f9;
+    border-radius: 16px;
+    padding: 22px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.sd-empty {
+    background: white;
+    border: 1px dashed #cbd5e1;
+    border-radius: 16px;
+    padding: 32px 24px;
+    text-align: center;
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+/* ===== Header ===== */
+.sd-header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.sd-avatar {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: #e2e8f0;
+}
+
+.sd-who {
+    flex: 1;
+    min-width: 0;
+}
+
+.sd-who h1 {
+    font-size: 1.4rem;
+    color: #0f172a;
+    margin: 2px 0 4px;
+}
+
+.sd-sub {
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.sd-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.sd-badge {
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 40px;
+    flex-shrink: 0;
+}
+
+.sd-badge.pending   { background: #ffedd5; color: #ea580c; }
+.sd-badge.confirmed { background: #e8f5e9; color: #2e7d32; }
+.sd-badge.completed { background: #e0f2fe; color: #0284c7; }
+.sd-badge.declined  { background: #fee2e2; color: #dc2626; }
+
+/* ===== Facts ===== */
+.sd-facts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px 28px;
+}
+
+.sd-fact {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    min-width: 0;
+}
+
+.sd-fact > i {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #e8f5e9;
+    color: #2e7d32;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.sd-fact > div {
+    min-width: 0;
+}
+
+.sd-value {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-top: 3px;
+}
+
+.sd-hint {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-top: 2px;
+}
+
+.sd-break {
+    overflow-wrap: anywhere;
+}
+
+.sd-value a {
+    color: #2e7d32;
+    text-decoration: none;
+}
+
+.sd-value a:hover {
+    text-decoration: underline;
+}
+
+/* ===== Notes ===== */
+.sd-notes {
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: #0f172a;
+    margin-top: 8px;
+    white-space: pre-wrap;
+}
+
+/* ===== Actions ===== */
+.sd-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.sd-join,
+.sd-secondary {
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 12px 24px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.sd-join {
+    display: inline-flex;
+    background: #0f2744;
+    color: white;
+}
+
+.sd-join:hover {
+    background: #1e3a5f;
+}
+
+.sd-secondary {
+    display: inline-flex;
+    background: white;
+    color: #2e7d32;
+    border: 2px solid #4caf50;
+}
+
+.sd-join:focus-visible,
+.sd-secondary:focus-visible,
+.sd-back:focus-visible {
+    outline: 2px solid #2e7d32;
+    outline-offset: 2px;
+}
+
+@media (max-width: 700px) {
+    .sd-facts {
+        grid-template-columns: 1fr;
+    }
+
+    .sd-header {
+        flex-wrap: wrap;
+    }
+}

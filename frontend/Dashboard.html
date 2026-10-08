@@ -19,7 +19,7 @@
 		<a href="Dashboard.html" class="active"  data-page="home">Home</a>
 		<a href="Mentors.html" data-page="mentor">Find Mentor</a>
 		<a href="EncouragementWall.html" data-page="encouragement">Encouragement</a>
-		<a href="#" data-page="resources">Resources</a>
+		<a href="InformationTechnology.html" data-page="resources">Resources</a>
 	</div>
 
 	<div style="display: flex; gap: 16px; align-items: center;">
@@ -289,6 +289,9 @@
 	<button class="post-btn">Post Encouragement</button>
 
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabaseClient.js"></script>
+<script src="bookings.js"></script>
 <script>
 	const profileBtn = document.getElementById('profileBtn');
 	const dropdown = document.getElementById('dropdownMenu');
@@ -326,7 +329,7 @@
 					window.location.href = 'Home.html';
 				}
 			} else if (navItem === 'mentors') {
-				window.location.href = 'InformationTechnology.html';
+				window.location.href = 'Mentors.html';
 				return;
 			} else if (navItem === 'messages') {
 				window.location.href = 'Messages.html';
@@ -379,8 +382,11 @@
 			}
 		}
 	}
-
 	loadUserIntoDashboard();
+	initStudentUpcomingSession();
+	initStudentBookedMentors();
+	initSuggestedMentors();
+	initDashboardEncouragement();
 </script>
 </body>
 </html>

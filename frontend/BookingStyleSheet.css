@@ -436,3 +436,7 @@ hr{
 .btn2:hover, .btn3:hover, .btn4:hover {
       background-color: #7ed957; 
 }
+.booking-grid .imgBx img[class^="profile"] {
+    object-fit: cover;
+    object-position: center 20%;
+}
