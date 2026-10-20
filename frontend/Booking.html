@@ -19,7 +19,7 @@
 		<a href="Dashboard.html" class="active"  data-page="home">Home</a>
 		<a href="Mentors.html" data-page="mentor">Find Mentor</a>
 		<a href="EncouragementWall.html" data-page="encouragement">Encouragement</a>
-		<a href="#" data-page="resources">Resources</a>
+		<a href="InformationTechnology.html" data-page="resources">Resources</a>
 	</div>
 
 	<div style="display: flex; gap: 16px; align-items: center;">
@@ -36,10 +36,10 @@
 			</div>
 			<div class="divider-vertical"></div>
 			<div class="profile-preview" id="profileBtn">
-				<img src="Polygon 1.png" alt="profile">
+				<img id="profileAvatar" src="Polygon 1.png" alt="profile">
 				<div class="info">
-					<div class="name">Angle M.</div>
-					<div class="role">Youth</div>
+					<div class="name" id="profileName">Student</div>
+					<div class="role" id="profileRole">Student</div>
 				</div>
 				<span class="arrow-down"><i class="fas fa-chevron-down"></i></span>
 			</div>
@@ -156,6 +156,37 @@
 <script src="supabaseClient.js"></script>
 <script src="bookings.js"></script>
 <script>
+	// LOAD LOGGED-IN USER
+	function loadUserIntoBooking() {
+		const raw = localStorage.getItem('careerUser');
+		if (!raw) {
+			window.location.href = 'Home.html';   // or Register.html
+			return;
+		}
+
+		const user = JSON.parse(raw);
+		const fullName = user.fullname || 'Student';
+
+		const profileName = document.getElementById('profileName');
+		const profileRole = document.getElementById('profileRole');
+		const profileAvatar = document.getElementById('profileAvatar');
+
+		if (profileName) profileName.textContent = fullName;
+		if (profileRole) profileRole.textContent = user.role || 'Student';
+
+		if (profileAvatar) {
+			if (user.avatar) {
+				profileAvatar.src = user.avatar;
+			} else {
+				profileAvatar.src =
+						'https://ui-avatars.com/api/?name=' +
+						encodeURIComponent(fullName) +
+						'&background=e2e8f0&color=64748b';
+			}
+		}
+	}
+
+	loadUserIntoBooking();
 
 	initStudentBookingButtons();
 
@@ -170,20 +201,8 @@
 	document.addEventListener('click', () => {
 		dropdown.classList.remove('show');
 	});
-	document.querySelectorAll('.menu-item[data-nav]').forEach(function(item) {
-		item.addEventListener('click', function() {
-			const destination = item.dataset.nav;
 
-			if (destination === 'Home.html') {
-				const confirmed = confirm('Are you sure you want to log out?');
-				if (!confirmed) {
-					return;
-				}
-			}
-
-			window.location.href = destination;
-		});
-	});
+	// Sidebar navigation (same as before)
 	document.querySelectorAll('.sidebar li').forEach(item => {
 		item.addEventListener('click', () => {
 			const navItem = item.dataset.nav;
@@ -192,34 +211,43 @@
 
 			if (navItem === 'dashboard') {
 				window.location.href = 'Dashboard.html';
-				return;
 			} else if (navItem === 'logout') {
 				const confirmed = confirm('Are you sure you want to log out?');
 				if (confirmed) {
+					localStorage.removeItem('careerUser');
+					localStorage.removeItem('isLoggedIn');
 					window.location.href = 'Home.html';
 				}
 			} else if (navItem === 'mentors') {
-				window.location.href = 'InformationTechnology.html';
-				return;
+				window.location.href = 'Mentors.html';
 			} else if (navItem === 'messages') {
 				window.location.href = 'Messages.html';
-				return;
 			} else if (navItem === 'booking') {
 				window.location.href = 'Booking.html';
-				return;
 			} else if (navItem === 'encouragement') {
 				window.location.href = 'EncouragementWall.html';
-				return;
 			} else if (navItem === 'experiances') {
 				window.location.href = 'ExperianceWall.html';
 			} else if (navItem === 'settings') {
 				window.location.href = 'Settings.html';
-				return;
 			} else if (navItem === 'help') {
 				window.location.href = 'HelpAndSupport.html';
 			}
 		});
 	});
+
+	const logoutBtn = document.getElementById('logoutBtn');
+	if (logoutBtn) {
+		logoutBtn.addEventListener('click', (e) => {
+			e.preventDefault();
+			const confirmed = confirm('Are you sure you want to log out?');
+			if (confirmed) {
+				localStorage.removeItem('careerUser');
+				localStorage.removeItem('isLoggedIn');
+				window.location.href = 'Home.html';
+			}
+		});
+	}
 </script>
 </body>
 </html>				

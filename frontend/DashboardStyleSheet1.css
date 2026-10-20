@@ -1025,3 +1025,41 @@ body{
     font-size: 10px;
     color: #888;
 }
+.top-layout > img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+.bottom-layout .imgBx img.profile,
+.bottom-layout .imgBx img.profile2,
+.bottom-layout .imgBx img.profile3 {
+    width: 64px;
+    height: 64px;
+    top: -44px;
+    object-fit: cover;
+    object-position: center 20%;
+}
+
+.bottom-layout h3 {
+    max-width: 105px;
+    max-height: 34px;
+    overflow: hidden;
+    line-height: 1.2;
+}
+
+.bottom-layout h4 {
+    max-width: 125px;
+    max-height: 34px;
+    overflow: hidden;
+    line-height: 1.2;
+}
+.top-layout > img {
+    object-position: center 20%;
+}
+.encouragement-wall .post-content p {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
