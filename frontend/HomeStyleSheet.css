@@ -1,150 +1,106 @@
  /* Reset default browser styles */
- * {
-     margin: 0;
-     padding: 0;
-     box-sizing: border-box;
- }
-
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
  body {
-     font-family: Arial, sans-serif;
-     /* background: #f0f2f5; */
-     display: flex;
-     flex-direction: row;
-     /* margin-top: 50px; */
-     /* justify-content: center; */
-     /* align-items: center; */
-     height: 100vh;
-     padding: 20px;
- }
+            font-family: Arial, sans-serif;
+            /* background: #f0f2f5; */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .home h1 {
+            font-family: Arial, sans-serif;
+            font-size: 70px;
+            color: aliceblue;
+            position: relative;
+            right:500px;
+            bottom: 20px;
+        }
+        .home h2 {
+            font-family: Arial, sans-serif;
+            font-size: 40px;
+            color: rgb(3, 146, 3);
+            position: relative;
+            right:500px;
+            bottom: 15px;
+        }
+        .home p {
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            color: rgb(255, 255, 255);
+            position: relative;
+            right:500px;
+            top: 0px;
+        }
 
- .home{
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 100px;
- }
+/* ==============================================================Log in box=========================================================== */
+        .login-box {
+            /* opacity: 44%; */
+            background: rgba(255, 255, 255, 0.44);
+            position: absolute;
+            right: 150px;
+            /* background: #fff; */
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            width: 500px;
+            height: 600px;
+        }
 
- .home h1 {
-     font-family: Arial, sans-serif;
-     font-size: 70px;
-     color: aliceblue;
-     /* position: relative;
-     right: 500px;
-     bottom: 120px; */
- }
+        .login-box h2 {
+            opacity: 100%;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #000000;
+            height: 100px;
+        }
 
- .home h2 {
-     font-family: Arial, sans-serif;
-     font-size: 40px;
-     color: rgb(3, 146, 3);
-     /* position: relative;
-     right: 500px;
-     bottom: 100px; */
- }
+        .login-box input[type="text"],
+        .login-box input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            /* border: 1px solid #ccc; */
+            border: none;
+            border-bottom: 3px solid #000000;
+            outline: none;
+            background: rgba(255, 255, 255, 0);
+            /* border-radius: 4px; */
+        }
 
- .home p {
-     font-family: Arial, sans-serif;
-     font-size: 20px;
-     color: rgb(255, 255, 255);
-     /* position: relative;
-     right: 500px;
-     bottom: 80px; */
- }
+        .login-box button {
+            width: 40%;
+            padding: 10px;
+            background: #14b119;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: 30%;
+            margin-top: 50px;
+        }
 
- /* ==============================================================Log in box=========================================================== */
- .loginContainer {
-     background-image: url("/background.png");
-     background-repeat: no-repeat;
-     background-size: cover;
-     background-position: center;
-     position: absolute;
-     right: 15px;
-     padding: 25px;
-     border-radius: 0px;
-     border-top: 40px solid transparent;
-     border-right: 40px solid transparent;
-     border-bottom: 40px solid transparent;
-     /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
-     width: 500px;
-     height: 600px;
-     /* margin: 10px; */
- }
+        .login-box button:hover {
+            background: #45a049;
+        }
 
- .login-box {
-     background: rgba(121, 121, 121, 0.1);
-     backdrop-filter: blur(10px);
-     position: absolute;
-     right: 40px;
-     padding: 25px;
-     border-radius: 8px;
-     /* border: 5px transparent; */
-     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-     width: 410px;
-     height: 470px;
- }
+        .login-box p {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
 
- .login-box h2 {
-     opacity: 100%;
-     text-align: center;
-     margin-bottom: 5px;
-     color: #fff;
-     height: 100px;
- }
+        .login-box span {
+            color: #4CAF50;
+            text-decoration: none;
+        }
 
- .login-box input[type="text"],
- .login-box input[type="password"] {
-     width: 100%;
-     padding: 5px;
-     margin: 8px 0;
-     border: none;
-     border-radius: 10px;
-     border-bottom: 3px solid #1B5E20;
-     outline: none;
-     background: rgba(255, 255, 255, 0);
-     color: #fff;
-     /* border-radius: 4px; */
- }
-
- form label{
-    color: #fff;
-    font-weight: normal;
- }
-
- .login-box button {
-     width: 40%;
-     padding: 10px;
-     background: #14b119;
-     color: white;
-     border: none;
-     border-radius: 20px;
-     cursor: pointer;
-     font-size: 16px;
-     margin-left: 30%;
-     margin-top: 50px;
- }
-
- .login-box button:hover {
-     background: #45a049;
- }
-
- .login-box p {
-     text-align: center;
-     margin-top: 20px;
-     font-size: 14px;
-     color: #fff;
- }
-
- .login-box span {
-     color: #4CAF50;
-     text-decoration: none;
- }
-
- .homeForgot{
-    color: green; 
-    text-decoration: unset;
-    /* margin-top: 140px; */
- }
-
- /* .login-box a:hover {
+        /* .login-box a:hover {
             text-decoration: underline;
         } */
+		
