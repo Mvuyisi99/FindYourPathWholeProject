@@ -18,10 +18,10 @@
         </div>
 
         <div class="admin-card">
-            <img src="Polygon 1.png" alt="Admin" class="admin-avatar">
+            <img class="admin-avatar" id="sidebarAvatar">
             <div>
-                <div class="admin-name">Ms. Emily Thompson</div>
-                <div class="admin-role">Administrator</div>
+                <div class="admin-name" id="sidebarName">Mentor</div>
+                <div class="admin-role" id="sidebarRole">Mentor</div>
                 <div class="admin-status"><span class="dot"></span> Online</div>
             </div>
         </div>
@@ -51,7 +51,7 @@
     <div class="main-area">
         <header class="top-bar">
             <div class="welcome-block">
-                <h1>Welcome back, Emily!</h1>
+                <h1 id="welcomeTitle">Welcome back!</h1>
                 <p>Here's what happening across FindYourPath today.</p>
             </div>
 
@@ -67,9 +67,10 @@
                 </button>
 
                 <div class="profile-preview" id="profileBtn">
-                    <img src="Polygon 1.png" alt="profile">
+                    <img class="admin-avatar"  id="profileAvatar">
                     <div class="info">
-                        <div class="name">Administrator</div>
+                        <div class="name" id="profileName">Student</div>
+                        <div class="role" id="profileRole">Student</div>
                     </div>
                     <i class="fas fa-chevron-down arrow-down"></i>
 
@@ -84,7 +85,7 @@
 
         <main class="page-content">
             <div class="heading">
-                <h1 id="welcomeTitle">Overview</h1>
+                <h1 id="">Overview</h1>
             </div>
             <div class="stats-container">
 
@@ -338,6 +339,64 @@
         activityChart.data.datasets[1].data = d.scheduled;
         activityChart.update();
     });
+    function loadUserIntoDashboard() {
+        const raw = localStorage.getItem('careerUser');
+        if (!raw) {
+            window.location.href = 'Register.html';
+            return;
+        }
+
+        const user = JSON.parse(raw);
+
+        const fullName = user.fullname || 'Mentor';
+        const firstName = fullName.split(' ')[0];
+
+        const profileName = document.getElementById('profileName');
+        const profileRole = document.getElementById('profileRole');
+        const welcomeTitle = document.getElementById('welcomeTitle');
+        const profileAvatar = document.getElementById('profileAvatar');
+
+        if (profileName) profileName.textContent = fullName;
+        if (profileRole) profileRole.textContent = user.role || 'Mentor';
+        if (welcomeTitle) welcomeTitle.textContent = `Welcome back, ${firstName}!`;
+
+        const sidebarName = document.getElementById('sidebarName');
+        const sidebarRole = document.getElementById('sidebarRole');
+
+        if (sidebarName) sidebarName.textContent = fullName;
+        if (sidebarRole) sidebarRole.textContent = user.role || 'Mentor';
+
+    }
+    async function loadMentorPhoto() {
+        const imgs = [
+            document.getElementById('sidebarAvatar'),
+            document.getElementById('profileAvatar')
+        ].filter(Boolean);
+        if (!imgs.length) return;
+
+        try {
+            const { data } = await sb.auth.getUser();
+            if (!data || !data.user) return;
+
+            const raw = localStorage.getItem('careerUser');
+            const name = (raw && JSON.parse(raw).fullname) || 'Mentor';
+            const fallback = initialsAvatar(name);
+
+            const photo = await mentorPhotoUrl(data.user.id);
+
+            imgs.forEach(img => {
+                img.onerror = () => { img.onerror = null; img.src = fallback; };
+                img.src = photo || fallback;
+                img.alt = name;
+            });
+        } catch (e) {
+            console.error('Could not load profile picture:', e);
+        }
+    }
+
+    loadUserIntoDashboard();
+    loadMentorPhoto();
+    loadUserIntoDashboard();
 </script>
 </body>
 </html>

@@ -79,7 +79,7 @@ const BookingStore = {
             .subscribe();
     },
 
-    /* ---------- mentor side ---------- */
+    /* mentor side  */
 
     async forMentor() {
         const user = await this.requireUser();
@@ -109,7 +109,22 @@ const BookingStore = {
             .update(changes).eq('id', id).select().single();
         if (error) throw error;
         return data;
+    },
+
+    async complete(id) {
+        const user = await this.requireUser();
+        if (!user) return null;
+        const { data, error } = await sb.from('bookings')
+            .update({ status: 'completed' })
+            .eq('id', id)
+            .eq('mentor_id', user.id)
+            .eq('status', 'confirmed')
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
     }
+
 };
 
 /* Sidebar navigation for the mentor pages. Adjust file names to match yours. */
@@ -117,7 +132,6 @@ function initMentorNav() {
     const routes = {
         dashboard: 'MentorDashboard.html',
         booking: 'MentorBookings.html'
-        // users: 'Users.html', mentors: 'Mentors.html', ...
     };
     document.querySelectorAll('.sidebar li[data-nav]').forEach(li => {
         li.addEventListener('click', () => {
@@ -272,7 +286,7 @@ async function initStudentBookingButtons() {
     window.addEventListener('focus', refresh);           // fallback if Realtime is off
 }
 
-/* ---------- Student dashboard: next upcoming session ---------- */
+/* Student dashboard: next upcoming session */
 
 function localToday() {
     const n = new Date();
@@ -357,11 +371,9 @@ async function initStudentUpcomingSession() {
                 .limit(10);
             if (error) throw error;
 
-            // For a session today, skip it once it has ended
             const next = data.find(b => b.session_date > localToday() || b.end_time > nowTime);
             if (!next) { showEmpty(); return; }
 
-            // Mentor's picture, if they have set one
             let photo = null;
             const { data: mentor } = await sb.from('profiles')
                 .select('*').eq('id', next.mentor_id).maybeSingle();
@@ -393,13 +405,52 @@ async function initStudentUpcomingSession() {
     await load();
     window.addEventListener('focus', load);
 }
+/*  Student dashboard: sessions completed  */
 
-/* ---------- Session details (student) ---------- */
+async function initStudentSessionsCompleted() {
+    const countEl = document.getElementById('sessionsCompletedCount');
+    const hoursEl = document.getElementById('hoursMentoredCount');
+    if (!countEl && !hoursEl) return;
 
-// Column in profiles that holds the picture. Add yours here if it is named differently.
+    function formatMentored(mins) {
+        if (mins < 60) return mins + 'm';
+        const h = Math.floor(mins / 60);
+        const m = mins % 60;
+        return m ? h + 'h ' + m + 'm' : h + 'h';
+    }
+
+    async function load() {
+        try {
+            const { data: auth } = await sb.auth.getUser();
+            if (!auth || !auth.user) return;
+
+            const { data, error } = await sb.from('bookings')
+                .select('start_time, end_time')
+                .eq('student_id', auth.user.id)
+                .eq('status', 'completed');
+            if (error) throw error;
+
+            const mins = data.reduce((sum, b) =>
+                sum + (b.start_time && b.end_time
+                    ? Math.max(0, minutesBetween(b.start_time, b.end_time))
+                    : 0), 0);
+
+            if (countEl) countEl.textContent = data.length;
+            if (hoursEl) hoursEl.textContent = formatMentored(mins);
+        } catch (e) {
+            console.error('Could not load completed sessions:', e);
+        }
+    }
+
+    await load();
+    window.addEventListener('focus', load);
+    BookingStore.watchMyBookings(load);
+}
+
+/*  Session details (student)  */
+
 const PROFILE_AVATAR_COLUMNS = ['avatar_url', 'avatar', 'profile_picture', 'profile_image', 'photo_url', 'image_url'];
 
-// A mentor's picture URL, or null if they have not set one
 async function mentorPhotoUrl(mentorId) {
     try {
         const { data } = await sb.from('profiles').select('*').eq('id', mentorId).maybeSingle();
@@ -411,7 +462,6 @@ async function mentorPhotoUrl(mentorId) {
     }
 }
 
-// One booking, only if it belongs to the signed-in student
 BookingStore.getForStudent = async function (id) {
     const user = await this.requireUser();
     if (!user) return null;
@@ -471,12 +521,13 @@ async function initStudentSessionDetails() {
     /* status */
     const today = localToday();
     const nowTime = new Date().toTimeString().slice(0, 8);
-    let label = { pending: 'Pending', confirmed: 'Confirmed', declined: 'Declined' }[b.status] || b.status;
+    const ended = b.status === 'confirmed' && b.session_date &&
+        (b.session_date < today || (b.session_date === today && b.end_time <= nowTime));
+    let label = { pending: 'Pending', confirmed: 'Confirmed', declined: 'Declined', completed: 'Completed' }[b.status] || b.status;
     let cls = b.status;
-    if (b.status === 'confirmed' && b.session_date &&
-        (b.session_date < today || (b.session_date === today && b.end_time <= nowTime))) {
-        label = 'Completed';
-        cls = 'completed';
+    if (ended) {
+        label = 'Awaiting completion';
+        cls = 'pending';
     }
     $('sdStatus').textContent = label;
     $('sdStatus').className = 'sd-badge ' + cls;
@@ -519,7 +570,7 @@ async function initStudentSessionDetails() {
         a.textContent = url;
         $('sdPlace').appendChild(a);
         $('sdJoin').href = url;
-        if (cls !== 'completed' && b.status === 'confirmed') $('sdJoin').style.display = 'inline-flex';
+        if (b.status === 'confirmed' && !ended) $('sdJoin').style.display = 'inline-flex';
     } else {
         $('sdPlace').textContent = b.location || 'Your mentor has not added this yet';
     }

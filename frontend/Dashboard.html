@@ -183,7 +183,7 @@
 
 	<div class="stat-card">
 		<h3>Sessions Completed</h3>
-		<div class="stat-number">6</div>
+		<div class="stat-number" id="sessionsCompletedCount">0</div>
 
 		<div class="stat-footer">
 			<p>Great work!</p>
@@ -193,7 +193,7 @@
 
 	<div class="stat-card">
 		<h3>Hours Mentored</h3>
-		<div class="stat-number">12</div>
+		<div class="stat-number" id = "hoursMentoredCount">0</div>
 
 		<div class="stat-footer">
 			<p>Keep it up!</p>
@@ -384,6 +384,7 @@
 	}
 	loadUserIntoDashboard();
 	initStudentUpcomingSession();
+	initStudentSessionsCompleted();
 	initStudentBookedMentors();
 	initSuggestedMentors();
 	initDashboardEncouragement();
