@@ -1,10 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Home Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page - FindYourPath</title>
     <link rel="stylesheet" href="HomeStyleSheet.css">
+    
+    <!-- Supabase Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <style>
+        .login-box input[type="email"] {
+            width: 100%;
+            padding: 5px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 10px;
+            border-bottom: 3px solid #1B5E20;
+            outline: none;
+            background: rgba(255, 255, 255, 0);
+            color: #fff;
+        }
+        .login-box input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+    </style>
 </head>
 <body background="background2.jpg">
+    
     <div class="home">
         <h1>Welcome</h1>
         <h2>FindYourPath</h2>
@@ -13,33 +36,70 @@
 
     <!-- =====================================================Log in===================================================== -->
     <div class="loginContainer">
-    <div class="login-box">
-        <h2>Login</h2>
-        <form action="#" method="post" onsubmit="return validateForm()">
-            <label>Username</label><br>
-            <input labe type="text" id="username" name="username"><br><br><br>
-            <label>Password</label><br>
-            <input type="password" id="password" name="password">
-            <label><a href="ForgotPassword.html"><b class="homeForgot">Forgot Password?</b></a></label><br>
-            <button type="submit"><b>Login</b></button>
-        </form>
-        <p>Don't have an account? <a href="Register.html" style="color: green;">Sign up</a></p>
+        <div class="login-box">
+            <h2>Login</h2>
+            <form id="loginForm">
+                
+                <label>Email</label><br>
+                <input type="email" id="email" name="email" placeholder="" required><br><br>
+                
+                <label>Password</label><br>
+                <input type="password" id="password" name="password" placeholder="" required>
+                
+                <label><a href="ForgotPassword.html"><b class="homeForgot">Forgot Password?</b></a></label><br>
+                
+                <button type="submit" id="loginBtn"><b>Login</b></button>
+            </form>
+            
+            <p>Don't have an account? <a href="Register.html" style="color: lightgreen; text-decoration: none;">Sign up</a></p>
+        </div>
     </div>
-    </div>
 
-	<script>
-		function validateForm() {
-			const username = document.getElementById('username').value.trim();
-			const password = document.getElementById('password').value.trim();
+    <script>
+        const SUPABASE_URL = 'https://ljcjbhsragnkmptbefap.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_012NtEo04_Pg0xORvnYHTg_TDCDFE9m';
+        
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: {
+                storage: window.sessionStorage,
+                autoRefreshToken: true,
+                persistSession: true,
+                detectSessionInUrl: true
+            }
+        });
 
-			if (username === '' || password === '') {
-				alert('Please enter both username and password.');
-				return false;   
-			}
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-			window.location.href = 'Dashboard.html';
-			return false;   
-		}
-		</script>
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const loginBtn = document.getElementById('loginBtn');
+
+            const originalBtnText = loginBtn.innerHTML;
+            loginBtn.innerHTML = '<b>Logging in...</b>';
+            loginBtn.disabled = true;
+
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
+                    email: email,
+                    password: password,
+                });
+
+                if (error) {
+                    alert('Login Failed: ' + error.message);
+                    
+                    loginBtn.innerHTML = originalBtnText;
+                    loginBtn.disabled = false;
+                } else if (data.session) {
+                    window.location.href = 'Dashboard.html';
+                }
+            } catch (err) {
+                console.error('Unexpected error:', err);
+                alert('An error occurred. Please check your connection.');
+                loginBtn.innerHTML = originalBtnText;
+                loginBtn.disabled = false;
+            }
+        });
+    </script>
 </body>
 </html>
