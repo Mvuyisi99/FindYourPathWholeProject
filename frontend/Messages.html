@@ -10,9 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="messageStyle.css">
-    <style>
-        /* --- Reset & Base Styles --- */
-    </style>
 </head>
 
 <body>
@@ -43,7 +40,7 @@
             </div>
             <div class="divider-vertical"></div>
             <div class="profile-preview" id="profileBtn">
-                <img src="Polygon 1.png" alt="profile">
+                <img src="Polygon 1.png" alt="profile" onerror="this.src='https://randomuser.me/api/portraits/women/68.jpg'">
                 <div class="info">
                     <div class="name">Angle M.</div>
                     <div class="role">Youth</div>
@@ -72,10 +69,9 @@
             <li data-nav="logout"><i class="fas fa-sign-out-alt"></i> Log out</li>
         </ul>
 
-
         <div class="sidebar-footer" id="aboutFooter">
             <div class="promo-card">
-                <div><img src="PROJECT 3 LOGO.png" alt="Profile" class="promo-img"></div>
+                <div><img src="PROJECT 3 LOGO.png" alt="Profile" class="promo-img" onerror="this.src='https://via.placeholder.com/120x120?text=FP'"></div>
                 <div class="promo-text">
                     Real guidance.<br>Local mentors.<br>Brighter futures.
                 </div>
@@ -99,94 +95,20 @@
         </div>
 
         <div class="chat-users" id="chatListContainer">
-            <!-- Added 'data-unread="true"' to those with green dots for JS filtering -->
-            <div class="chat-user-item active" data-unread="false" onclick="selectChat(this, 'Asiphe Dosi')">
-                <img src="Ellipse 7.png" alt="Asiphe" class="user-avatar-md">
-                <div class="user-info">
-                    <div class="user-name">Asiphe Dosi</div>
-                    <div class="user-msg">Everything is temporary</div>
-                </div>
-            </div>
-
-            <div class="chat-user-item" data-unread="true" onclick="selectChat(this, 'Klyan Shane')">
-                <img src="Ellipse 5.png" alt="Klyan" class="user-avatar-md">
-                <div class="user-info">
-                    <div class="user-name">Klyan Shane</div>
-                    <div class="user-msg">Sun sets, sun rises</div>
-                </div>
-                <div class="status-dot"></div>
-            </div>
-
-            <div class="chat-user-item" data-unread="false" onclick="selectChat(this, 'Aron Smith')">
-                <img src="Ellipse 9.png" alt="Aron" class="user-avatar-md">
-                <div class="user-info">
-                    <div class="user-name">Aron Smith</div>
-                    <div class="user-msg">I know that birds fly in different directions</div>
-                </div>
-            </div>
-
-            <div class="chat-user-item" data-unread="true" onclick="selectChat(this, 'Mduduzi Zwane')">
-                <img src="Ellipse 6.png" alt="Mduduzi" class="user-avatar-md">
-                <div class="user-info">
-                    <div class="user-name">Mduduzi Zwane</div>
-                    <div class="user-msg">When the moon is looking down</div>
-                </div>
-                <div class="status-dot"></div>
-            </div>
-
-            <div class="chat-user-item" data-unread="true" onclick="selectChat(this, 'Jessica Motaung')">
-                <img src="Ellipse 8.png" alt="Jessica" class="user-avatar-md">
-                <div class="user-info">
-                    <div class="user-name">Jessica Motaung</div>
-                    <div class="user-msg">I find hard to let you see the shadow...</div>
-                </div>
-                <div class="status-dot"></div>
-            </div>
-
-            <div class="chat-user-item" data-unread="false" onclick="selectChat(this, 'Angelo Author')">
-                <img src="Ellipse 10.png" alt="Angelo" class="user-avatar-md">
-                <div class="user-info">
-                    <div class="user-name">Angelo Author</div>
-                    <div class="user-msg">Sorry I could be so blind</div>
-                </div>
-            </div>
-
-            <div class="chat-user-item" data-unread="false" onclick="selectChat(this, 'Indiphile Mbali')">
-                <img src="Ellipse 18.png" alt="Indiphile" class="user-avatar-md">
-                <div class="user-info">
-                    <div class="user-name">Indiphile Mbali</div>
-                    <div class="user-msg">So fly high!</div>
-                </div>
-            </div>
+            <!-- Populated dynamically by Supabase -->
+            <div style="padding: 20px; color: white; text-align: center;">Loading...</div>
         </div>
     </section>
 
     <!-- Right Chat Window -->
     <section class="chat-main-panel">
         <div class="chat-main-header">
-            <img id="activeChatAvatar" src="Ellipse 5.png" alt="Avatar">
-            <div class="chat-main-name" id="activeChatName">Asiphe Dosi</div>
+            <img id="activeChatAvatar" src="https://via.placeholder.com/45" alt="Avatar">
+            <div class="chat-main-name" id="activeChatName">Select a mentor</div>
         </div>
 
         <div class="chat-messages" id="messageContainer">
-            <div class="message msg-sent">
-                Hi Asiphe, how are you doing today?
-            </div>
-            <div class="message msg-received">
-                I'm doing great! Thanks for asking.
-            </div>
-            <div class="message msg-sent">
-                That's wonderful to hear. I was wondering if you had time to look at the project brief I sent?
-            </div>
-            <div class="message msg-received">
-                Yes, I just finished reviewing it. It looks promising! I have a few ideas I'd like to share.
-            </div>
-            <div class="message msg-sent">
-                hello
-            </div>
-            <div class="message msg-sent">
-                how are you
-            </div>
+            <!-- Messages injected by JS -->
         </div>
 
         <div class="chat-input-area">
@@ -198,175 +120,345 @@
     </section>
 </div>
 
-</div>
+<!-- SUPABASE MESSAGING LOGIC -->
+<script type="module">
+    // import { supabase } from './supabaseClient.js';
+    import { supabase } from './supabaseClientModule.js';
 
-<!-- JAVASCRIPT LOGIC -->
-<script>
+    // --- STATE ---
+    let me = null;
+    let activeConvId = null;
+    let activeMentorId = null;
+    let activeChannel = null;
+
+    // --- PROFILE DROPDOWN & NAV ---
     const profileBtn = document.getElementById('profileBtn');
     const dropdown = document.getElementById('dropdownMenu');
+    profileBtn.addEventListener('click', (e) => { e.stopPropagation(); dropdown.classList.toggle('show'); });
+    document.addEventListener('click', () => dropdown.classList.remove('show'));
 
-    profileBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        dropdown.classList.toggle('show');
+    document.getElementById('logoutBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        if (confirm('Are you sure you want to log out?')) window.location.href = 'Home.html';
     });
-    // --- 1. SENDING MESSAGES LOGIC ---
-    function sendMessage() {
-        const inputField = document.getElementById('chatInput');
-        const messageText = inputField.value.trim();
-        const messageContainer = document.getElementById('messageContainer');
 
-        if (messageText !== "") {
-            // Create new message bubble
-            const newMessage = document.createElement('div');
-            newMessage.classList.add('message', 'msg-sent');
-            newMessage.textContent = messageText;
+    document.querySelectorAll('.sidebar li').forEach(item => {
+        item.addEventListener('click', () => {
+            const navItem = item.dataset.nav;
+            const pages = {
+                dashboard: 'Dashboard.html', mentors: 'Mentors.html', messages: 'Messages.html',
+                booking: 'Booking.html', encouragement: 'EncouragementWall.html',
+                experiances: 'ExperianceWall.html', settings: 'Settings.html', help: 'HelpAndSupport.html'
+            };
+            if (navItem === 'logout') {
+                if (confirm('Are you sure you want to log out?')) window.location.href = 'Home.html';
+            } else if (pages[navItem]) {
+                window.location.href = pages[navItem];
+            }
+        });
+    });
 
-            // Add to chat
-            messageContainer.appendChild(newMessage);
+    // --- INIT ---
+    async function init() {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+            alert('Please log in to access messages.');
+            window.location.href = 'Login.html';
+            return;
+        }
+        me = user;
+        await loadChatList();
+    }
 
-            // Clear input
-            inputField.value = '';
+    // --- 1. LOAD MENTORS & BUILD CHAT LIST ---
+        async function loadChatList() {
+        const container = document.getElementById('chatListContainer');
+        const myProfile = JSON.parse(localStorage.getItem('careerUser') || '{}');
+        const myRole = myProfile.role || 'youth';
 
-            // Auto-scroll to bottom
-            messageContainer.scrollTop = messageContainer.scrollHeight;
+        console.log("Loading chats. My Role:", myRole, "My ID:", me.id);
+
+        let connections = [];
+        if (myRole.toLowerCase() === 'mentor') {
+            // Fetch connections where I am the mentor
+            const { data, error } = await supabase.from('connections').select('student_id, status').eq('mentor_id', me.id);
+            if (error) console.error("Error fetching connections:", error);
+            connections = data || [];
+        } else {
+            // Fetch connections where I am the student
+            const { data, error } = await supabase.from('connections').select('mentor_id, status').eq('student_id', me.id);
+            if (error) console.error("Error fetching connections:", error);
+            connections = data || [];
+        }
+
+        console.log("Raw Connections from DB:", connections);
+
+        // Filter for accepted/approved connections only
+        const acceptedConnections = connections.filter(c => 
+            c.status === 'accepted' || c.status === 'approved' || c.status === 'active'
+        );
+
+        console.log("Accepted Connections:", acceptedConnections);
+
+        if (acceptedConnections.length === 0) {
+            container.innerHTML = `<div style="padding:20px; color:white; text-align:center;">No accepted connections. Ask your mentor to approve your request.</div>`;
+            return;
+        }
+
+        // Get the IDs of the people we need to talk to
+        const contactIds = acceptedConnections.map(c => myRole.toLowerCase() === 'mentor' ? c.student_id : c.mentor_id);
+        console.log("Looking up profiles for IDs:", contactIds);
+
+        // Fetch their profiles
+        const { data: profiles, error: pErr } = await supabase
+            .from('profiles')
+            .select('id, full_name, avatar_url')
+            .in('id', contactIds);
+
+        if (pErr) console.error("Error fetching profiles:", pErr);
+
+        // Render them
+        container.innerHTML = profiles.map((contact, index) => `
+            <div class="chat-user-item ${index === 0 ? 'active' : ''}"
+                 data-mentor-id="${contact.id}"
+                 onclick="window.__selectChat('${contact.id}', '${contact.full_name.replace(/'/g, "\\'")}', '${contact.avatar_url || ''}')">
+                <img src="${contact.avatar_url || 'https://via.placeholder.com/45'}" class="user-avatar-md">
+                <div class="user-info">
+                    <div class="user-name">${contact.full_name || 'Unknown User'}</div>
+                    <div class="user-msg">Click to chat</div>
+                </div>
+            </div>
+        `).join('');
+
+        if (profiles && profiles.length > 0) {
+            window.__selectChat(profiles[0].id, profiles[0].full_name, profiles[0].avatar_url || '');
+        }
+    }   
+
+        // --- 2. GET OR CREATE CONVERSATION ---
+    async function getOrCreateConversation(otherUserId) {
+        try {
+            // 1. Check if we already have a chat
+            const { data: myConvs } = await supabase
+                .from('conversation_participants')
+                .select('conversation_id')
+                .eq('user_id', me.id);
+
+            const myConvIds = (myConvs || []).map(c => c.conversation_id);
+
+            if (myConvIds.length > 0) {
+                const { data: match } = await supabase
+                    .from('conversation_participants')
+                    .select('conversation_id')
+                    .eq('user_id', otherUserId)
+                    .in('conversation_id', myConvIds)
+                    .maybeSingle();
+
+                if (match) return match.conversation_id;
+            }
+
+            // 2. Create a new chat
+            const { data: newConv, error: cErr } = await supabase
+                .from('conversations')
+                .insert({})
+                .select('id')
+                .single();
+
+            if (cErr) throw cErr;
+
+            // 3. Add both users
+            const { error: pErr } = await supabase
+                .from('conversation_participants')
+                .insert([
+                    { conversation_id: newConv.id, user_id: me.id, role: 'user' },
+                    { conversation_id: newConv.id, user_id: otherUserId, role: 'user' }
+                ]);
+
+            if (pErr) throw pErr;
+
+            return newConv.id;
+
+        } catch (err) {
+            console.error("Chat creation failed:", err);
+            return null;
         }
     }
 
-    // Allow pressing "Enter" key to send
-    function handleEnter(event) {
-        if (event.key === "Enter") {
-            sendMessage();
+    // --- 3. SELECT CHAT ---
+    window.__selectChat = async function (mentorId, mentorName, mentorAvatar) {
+        // Update UI immediately
+        document.querySelectorAll('.chat-user-item').forEach(i => i.classList.remove('active'));
+        const item = document.querySelector(`.chat-user-item[data-mentor-id="${mentorId}"]`);
+        if (item) item.classList.add('active');
+
+        document.getElementById('activeChatName').textContent = mentorName;
+        document.getElementById('activeChatAvatar').src = mentorAvatar || 'https://via.placeholder.com/45';
+        
+        const container = document.getElementById('messageContainer');
+        container.innerHTML = `<div style="text-align:center;color:#888;padding:20px;">Opening chat...</div>`;
+
+        activeMentorId = mentorId;
+        
+        // Get chat ID
+        activeConvId = await getOrCreateConversation(mentorId);
+
+        if (!activeConvId) {
+            container.innerHTML = `<div style="color:#dc2626;padding:20px;">Database error: Could not start chat. Check console.</div>`;
+            return;
         }
+
+        // Load messages
+        await loadMessages(activeConvId);
+        subscribeToMessages(activeConvId);
+    };
+
+        // --- 4. LOAD MESSAGES ---
+    async function loadMessages(convId) {
+        const container = document.getElementById('messageContainer');
+        
+        const { data: msgs, error } = await supabase
+            .from('messages')
+            .select('id, sender_id, body, created_at')
+            .eq('conversation_id', convId)
+            .order('created_at', { ascending: true });
+
+        if (error) {
+            console.error("Error loading messages:", error);
+            container.innerHTML = `<div style="color:red; padding:20px;">Error loading messages.</div>`;
+            return;
+        }
+
+        if (!msgs || msgs.length === 0) {
+            container.innerHTML = `<div class="message msg-received">No messages yet. Say hello!</div>`;
+            return;
+        }
+
+        container.innerHTML = msgs.map(m => {
+            const mine = m.sender_id === me.id;
+            return `<div class="message ${mine ? 'msg-sent' : 'msg-received'}">${escapeHtml(m.body)}</div>`;
+        }).join('');
+
+        container.scrollTop = container.scrollHeight;
+        
+        // Mark them as read
+        await markMessagesAsRead(convId, msgs);
     }
 
-    // --- 2. CHAT FILTER LOGIC (All, Unread, Read) ---
-    function filterChats(filterType) {
+    // --- 5. SEND MESSAGE ---
+    window.sendMessage = async function () {
+        if (!activeConvId) return;
+        
+        const input = document.getElementById('chatInput');
+        const text = input.value.trim();
+        if (!text) return;
+        input.value = '';
+
+        const { error } = await supabase
+            .from('messages')
+            .insert({
+                conversation_id: activeConvId,
+                sender_id: me.id,
+                body: text
+            });
+
+        if (error) {
+            console.error(error);
+            alert('Failed to send message.');
+            return;
+        }
+        await loadMessages(activeConvId);
+    };
+
+    window.handleEnter = function (e) {
+        if (e.key === 'Enter') window.sendMessage();
+    };
+
+    // --- 6. REALTIME SUBSCRIPTION ---
+    function subscribeToMessages(convId) {
+        if (activeChannel) supabase.removeChannel(activeChannel);
+
+        activeChannel = supabase
+            .channel('chat_' + convId)
+            .on('postgres_changes', {
+                event: 'INSERT',
+                schema: 'public',
+                table: 'messages',
+                filter: `conversation_id=eq.${convId}`
+            }, async (payload) => {
+                if (payload.new.sender_id === me.id) return;
+                await loadMessages(convId);
+            })
+            .subscribe();
+    }
+
+    // --- 7. MESSAGE READS ---
+    async function markMessagesAsRead(convId, msgs) {
+        const unread = msgs.filter(m => m.sender_id !== me.id);
+        if (unread.length === 0) return;
+
+        const reads = unread.map(m => ({
+            message_id: m.id,
+            user_id: me.id,
+            read_at: new Date().toISOString()
+        }));
+
+        await supabase
+            .from('message_reads')
+            .upsert(reads, { onConflict: 'message_id, user_id' }); 
+    }
+
+    // --- 8. FILTERS & SEARCH (DOM BASED) ---
+    window.filterChats = function(filterType) {
         const users = document.querySelectorAll('.chat-user-item');
         const buttons = document.querySelectorAll('.filter-btn');
         const searchInput = document.getElementById('chatSearchInput');
         const currentSearch = searchInput.value.toLowerCase().trim();
 
-        // Update active button styling
         buttons.forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
+        buttons.forEach(btn => {
+            if (btn.getAttribute('onclick').includes(`'${filterType}'`)) btn.classList.add('active');
+        });
 
         users.forEach(user => {
             const isUnread = user.getAttribute('data-unread') === 'true';
-
-            // 1. Check if the user matches the ACTIVE SEARCH TEXT
             const userName = user.querySelector('.user-name').textContent.toLowerCase();
             const matchesSearch = userName.includes(currentSearch);
 
-            // 2. Logic to hide users based on Filter + Search
             let hideByFilter = false;
             if (filterType === 'unread' && !isUnread) hideByFilter = true;
             if (filterType === 'read' && isUnread) hideByFilter = true;
 
-            // 3. Apply visibility
             if (hideByFilter || !matchesSearch) {
-                user.classList.add('hidden-user'); // Use CSS class for filter
-                user.style.display = 'none';       // Force hide for search
+                user.classList.add('hidden-user');
+                user.style.display = 'none';
             } else {
                 user.classList.remove('hidden-user');
-                user.style.display = 'flex';       // Force show
+                user.style.display = 'flex';
             }
         });
-    }
+    };
 
-    // --- 3. CHAT SELECTION LOGIC (Simulate switching users) ---
-    // --- 3. CHAT SELECTION LOGIC (Update Profile Picture too) ---
-    function selectChat(element, userName) {
-        // 1. Remove active class from all list items
-        document.querySelectorAll('.chat-user-item').forEach(item => item.classList.remove('active'));
-
-        // 2. Add active class to clicked item
-        element.classList.add('active');
-
-        // 3. Update the header name
-        document.getElementById('activeChatName').textContent = userName;
-
-        // --- NEW: UPDATE THE PROFILE PICTURE ---
-        // Find the <img> tag inside the clicked element
-        const clickedAvatar = element.querySelector('img');
-        if (clickedAvatar) {
-            // Get the src attribute (the image URL)
-            const newImgSrc = clickedAvatar.src;
-            // Apply it to the top header avatar
-            document.getElementById('activeChatAvatar').src = newImgSrc;
-        }
-        // ----------------------------------------
-
-        // 4. Clear chat history and set a welcome message for demo
-        const msgContainer = document.getElementById('messageContainer');
-        msgContainer.innerHTML = `
-        <div class="message msg-received">
-            Hello! I'm ${userName}. How can I help you today?
-        </div>
-    `;
-    }
-
-
-    //============================search=================================
-    // --- 4. SEARCH FUNCTIONALITY ---
     document.getElementById('chatSearchInput').addEventListener('input', function() {
-        const searchValue = this.value.toLowerCase().trim(); // Get typed text, make lowercase
-        const chatItems = document.querySelectorAll('.chat-user-item'); // Get all user rows
-
-        chatItems.forEach(item => {
-            // Find the user's name inside the item
-            const userNameElement = item.querySelector('.user-name');
-            if (userNameElement) {
-                const userName = userNameElement.textContent.toLowerCase();
-
-                // If the typed text matches the name, show it. Otherwise, hide it.
-                if (userName.includes(searchValue)) {
-                    // IMPORTANT: Remove the hidden class IF it was hidden by filter or search
-                    item.classList.remove('hidden-user');
-                    item.style.display = 'flex'; // Force it to show
-                } else {
-                    item.style.display = 'none'; // Explicitly hide non-matching users
-                }
+        const searchValue = this.value.toLowerCase().trim();
+        document.querySelectorAll('.chat-user-item').forEach(item => {
+            const nameEl = item.querySelector('.user-name');
+            if (nameEl) {
+                const matches = nameEl.textContent.toLowerCase().includes(searchValue);
+                item.classList.toggle('hidden-user', !matches);
+                item.style.display = matches ? 'flex' : 'none';
             }
         });
     });
-    // Sidebar navigation
-    document.querySelectorAll('.sidebar li').forEach(item => {
-        item.addEventListener('click', () => {
-            const navItem = item.dataset.nav;
-            document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
-            item.classList.add('active');
 
-            if (navItem === 'dashboard') {
-                window.location.href = 'Dashboard.html';
-                return;
-            } else if (navItem === 'logout') {
-                const confirmed = confirm('Are you sure you want to log out?');
-                if (confirmed) {
-                    window.location.href = 'Home.html';
-                }
-            } else if (navItem === 'mentors') {
-                window.location.href = 'Mentors.html';
-                return;
-            } else if (navItem === 'messages') {
-                window.location.href = 'Messages.html';
-                return;
-            } else if (navItem === 'booking') {
-                window.location.href = 'Booking.html';
-                return;
-            } else if (navItem === 'encouragement') {
-                window.location.href = 'EncouragementWall.html';
-                return;
-            } else if (navItem === 'experiances') {
-                window.location.href = 'ExperianceWall.html';
-            } else if (navItem === 'settings') {
-                window.location.href = 'Settings.html';
-                return;
-            } else if (navItem === 'help') {
-                window.location.href = 'HelpAndSupport.html';
-            }
-        });
-    });
+    // --- HELPERS ---
+    function escapeHtml(s) {
+        const d = document.createElement('div');
+        d.textContent = s;
+        return d.innerHTML;
+    }
+
+    // --- BOOT ---
+    init();
 </script>
 </body>
-
 </html>
