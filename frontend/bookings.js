@@ -133,6 +133,7 @@ function initMentorNav() {
         dashboard: 'MentorDashboard.html',
         booking: 'MentorBookings.html',
         calendar: 'MentorCalendar.html',
+        messages: 'Messages.html',
         settings: 'MentorSettings.html',
     };
     document.querySelectorAll('.sidebar li[data-nav]').forEach(li => {
