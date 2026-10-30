@@ -30,11 +30,9 @@
             <li class="active" data-nav="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
             <li data-nav="users"><i class="fas fa-users"></i> Users</li>
             <li data-nav="booking"><i class="far fa-calendar-alt"></i> Bookings</li>
-            <li data-nav="mentors"><i class="fas fa-user-friends"></i> Mentors</li>
-            <li data-nav="sessions"><i class="fas fa-video"></i> Sessions</li>
+            <li data-nav="calendar"><i class="fas fa-calendar-days"></i> Calendar</li>            <li data-nav="sessions"><i class="fas fa-video"></i> Sessions</li>
             <li data-nav="messages"><i class="far fa-comment-dots"></i> Messages</li>
-            <li data-nav="career"><i class="fas fa-briefcase"></i> Career Explorer</li>
-            <li data-nav="reports"><i class="fas fa-chart-line"></i> Report & Analytics</li>
+            <li data-nav="settings"><i class="fas fa-cog"></i> Settings</li>            <li data-nav="reports"><i class="fas fa-chart-line"></i> Report & Analytics</li>
             <li data-nav="announcements"><i class="fas fa-bell"></i> Announcements</li>
         </ul>
 
@@ -76,7 +74,7 @@
 
                     <div class="dropdown-menu" id="dropdownMenu">
                         <a href="#"><i class="fas fa-user"></i> My Profile</a>
-                        <a href="Settings.html"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="MentorSettings.html"><i class="fas fa-cog"></i> Settings</a>
                         <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log out</a>
                     </div>
                 </div>
@@ -91,68 +89,52 @@
 
                 <div class="stat-card">
                     <div class="stat-top">
-                        <div class="stat-icon-circle green">
-                            <i class="fas fa-user-friends"></i>
-                        </div>
+                        <div class="stat-icon-circle green"><i class="fas fa-user-friends"></i></div>
                         <div class="stat-info">
-                            <div class="stat-number">1,248</div>
-                            <div class="stat-label">Total students</div>
+                            <div class="stat-number" id="statStudents">0</div>
+                            <div class="stat-label">My Students</div>
                         </div>
                     </div>
-                    <div class="stat-trend up">
-                        <i class="fas fa-arrow-up"></i> 12% this month
-                    </div>
+                    <div class="stat-trend up" id="trendStudents"><i class="fas fa-minus"></i> --</div>
                 </div>
 
                 <div class="stat-card">
                     <div class="stat-top">
-                        <div class="stat-icon-circle purple">
-                            <i class="fas fa-user-plus"></i>
-                        </div>
+                        <div class="stat-icon-circle purple"><i class="fas fa-calendar-check"></i></div>
                         <div class="stat-info">
-                            <div class="stat-number">86</div>
-                            <div class="stat-label">Active Mentors</div>
+                            <div class="stat-number" id="statUpcoming">0</div>
+                            <div class="stat-label">Upcoming Sessions</div>
                         </div>
                     </div>
-                    <div class="stat-trend up">
-                        <i class="fas fa-arrow-up"></i> 8% this month
-                    </div>
+                    <div class="stat-trend up" id="trendUpcoming"><i class="fas fa-minus"></i> --</div>
                 </div>
 
                 <div class="stat-card">
                     <div class="stat-top">
-                        <div class="stat-icon-circle blue">
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
+                        <div class="stat-icon-circle blue"><i class="fas fa-calendar-alt"></i></div>
                         <div class="stat-info">
-                            <div class="stat-number">324</div>
-                            <div class="stat-label">Total Sessions</div>
+                            <div class="stat-number" id="statCompleted">0</div>
+                            <div class="stat-label">Completed Sessions</div>
                         </div>
                     </div>
-                    <div class="stat-trend up">
-                        <i class="fas fa-arrow-up"></i> 15% this month
-                    </div>
+                    <div class="stat-trend up" id="trendCompleted"><i class="fas fa-minus"></i> --</div>
                 </div>
 
                 <div class="stat-card">
                     <div class="stat-top">
-                        <div class="stat-icon-circle orange">
-                            <i class="fas fa-file-alt"></i>
-                        </div>
+                        <div class="stat-icon-circle orange"><i class="fas fa-file-alt"></i></div>
                         <div class="stat-info">
-                            <div class="stat-number">42</div>
+                            <div class="stat-number" id="statPending">0</div>
                             <div class="stat-label">Pending Requests</div>
                         </div>
                     </div>
-                    <div class="stat-trend down">
-                        <i class="fas fa-arrow-down"></i> 15% this month
-                    </div>
+                    <div class="stat-trend up" id="trendPending"><i class="fas fa-minus"></i> --</div>
                 </div>
 
             </div>
             <section class="activity-card">
                 <div class="activity-header">
-                    <h2>Platform Activity</h2>
+                    <h2>My Activity</h2>
                     <select class="activity-select" id="activityRange">
                         <option value="month">This Month</option>
                         <option value="lastMonth">Last Month</option>
@@ -171,62 +153,10 @@
             <div class="schedule-card">
                 <div class="schedule-header">
                     <h2>Upcoming Schedule</h2>
-                    <a href="#" class="view-calendar">View Calendar</a>
+                    <a href="MentorCalendar.html" class="view-calendar">View All</a>
                 </div>
-                <div class="schedule-list">
-                    <div class="schedule-item">
-                        <div class="date-box green">
-                            <span class="day">08</span>
-                            <span class="month">May</span>
-                        </div>
-                        <div class="schedule-info">
-                            <div class="title">Career Guidance Session</div>
-                            <div class="mentor">Lerato Dlamini</div>
-                            <div class="time">10:00AM - 11:00 AM</div>
-                        </div>
-                        <div class="status online">• Online</div>
-                    </div>
-                    <div class = "horizontal-divider"> </div>
-                    <div class="schedule-item">
-                        <div class="date-box gray">
-                            <span class="day">08</span>
-                            <span class="month">May</span>
-                        </div>
-                        <div class="schedule-info">
-                            <div class="title">CV & Career Advice</div>
-                            <div class="mentor">Sipho Khumalo</div>
-                            <div class="time">11:30 AM - 12:30 AM</div>
-                        </div>
-                        <div class="status online">• Online</div>
-                    </div>
-                    <div class = "horizontal-divider"> </div>
-                    <div class="schedule-item">
-                        <div class="date-box orange">
-                            <span class="day">09</span>
-                            <span class="month">May</span>
-                        </div>
-                        <div class="schedule-info">
-                            <div class="title">University Guidance</div>
-                            <div class="mentor">Aaliyah Jacobs</div>
-                            <div class="time">02:00AM - 03:00 AM</div>
-                        </div>
-                        <div class="status online">• Online</div>
-                    </div>
-                    <div class = "horizontal-divider"> </div>
-                    <div class="schedule-item">
-                        <div class="date-box red">
-                            <span class="day">09</span>
-                            <span class="month">May</span>
-                        </div>
-                        <div class="schedule-info">
-                            <div class="title">Career Change Advice</div>
-                            <div class="mentor">Thabiso Nkosi</div>
-                            <div class="time">03:30 AM - 04:30 AM</div>
-                        </div>
-                        <div class="status online">• Online</div>
-                    </div>
-                </div>
-                <button class="go-calendar-btn">Go to Calendar</button>
+                <div class="schedule-list" id="scheduleList"></div>
+                <button class="go-calendar-btn" onclick="window.location.href='MentorCalendar.html'">Go to Bookings</button>
             </div>
         </main>
     </div>
@@ -244,16 +174,11 @@
         e.stopPropagation();
         dropdown.classList.toggle('show');
     });
+    document.addEventListener('click', () => dropdown.classList.remove('show'));
 
-    const activityData = {
-        month: {
-            completed: [20, 27, 39, 23, 22],
-            scheduled: [12, 18, 25, 14, 13]
-        },
-        lastMonth: {
-            completed: [15, 22, 30, 28, 19],
-            scheduled: [10, 14, 20, 17, 11]
-        }
+    let activityData = {
+        month:     { completed: [0, 0, 0, 0, 0], scheduled: [0, 0, 0, 0, 0] },
+        lastMonth: { completed: [0, 0, 0, 0, 0], scheduled: [0, 0, 0, 0, 0] }
     };
 
     const valueLabels = {
@@ -319,8 +244,7 @@
             scales: {
                 y: {
                     min: 0,
-                    suggestedMax: 42,
-                    ticks: { stepSize: 10, color: '#0f172a', font: { size: 13, weight: 600 } },
+                    ticks: { color: '#0f172a', font: { size: 13, weight: 600 } },
                     grid: { color: '#e2e8f0' },
                     border: { display: false, dash: [4, 4] }
                 },
@@ -333,12 +257,64 @@
         plugins: [valueLabels]
     });
 
-    document.getElementById('activityRange').addEventListener('change', (e) => {
-        const d = activityData[e.target.value];
+    function refreshChart() {
+        const range = document.getElementById('activityRange').value;
+        const d = activityData[range];
+
         activityChart.data.datasets[0].data = d.completed;
         activityChart.data.datasets[1].data = d.scheduled;
+
+        const max = Math.max(...d.completed, ...d.scheduled, 1);
+        activityChart.options.scales.y.suggestedMax = max + 2;
+        activityChart.options.scales.y.ticks.stepSize = max <= 10 ? 1 : Math.ceil(max / 5);
+
         activityChart.update();
-    });
+    }
+
+    function weekOfMonth(day) {
+        return Math.min(Math.floor((day - 1) / 7), 4);
+    }
+
+    async function loadActivityData() {
+        try {
+            const { data: { user } } = await sb.auth.getUser();
+            if (!user) return;
+
+            const now = new Date();
+            const thisYear = now.getFullYear();
+            const thisMonth = now.getMonth();
+            const prev = new Date(thisYear, thisMonth - 1, 1);
+
+            const { data, error } = await sb
+                .from('bookings')
+                .select('status, session_date')
+                .eq('mentor_id', user.id)
+                .in('status', ['completed', 'confirmed'])
+                .not('session_date', 'is', null);
+
+            if (error) throw error;
+
+            data.forEach(b => {
+                // parse manually to avoid timezone shifts
+                const [y, m, d] = b.session_date.split('-').map(Number);
+
+                let key = null;
+                if (y === thisYear && m - 1 === thisMonth) key = 'month';
+                else if (y === prev.getFullYear() && m - 1 === prev.getMonth()) key = 'lastMonth';
+                if (!key) return;
+
+                const w = weekOfMonth(d);
+                if (b.status === 'completed') activityData[key].completed[w]++;
+                else activityData[key].scheduled[w]++;
+            });
+
+            refreshChart();
+        } catch (e) {
+            console.error('Could not load activity data:', e);
+        }
+    }
+
+    document.getElementById('activityRange').addEventListener('change', refreshChart);
     function loadUserIntoDashboard() {
         const raw = localStorage.getItem('careerUser');
         if (!raw) {
@@ -393,10 +369,161 @@
             console.error('Could not load profile picture:', e);
         }
     }
+    function setTrend(id, cur, prev) {
+        const el = document.getElementById(id);
+        if (!el) return;
 
+        let cls = 'up', icon = 'fa-arrow-up', text;
+        if (prev === 0) {
+            text = cur > 0 ? 'New this month' : 'No change';
+            if (cur === 0) icon = 'fa-minus';
+        } else {
+            const pct = Math.round(((cur - prev) / prev) * 100);
+            if (pct < 0) { cls = 'down'; icon = 'fa-arrow-down'; }
+            if (pct === 0) icon = 'fa-minus';
+            text = `${Math.abs(pct)}% vs last month`;
+        }
+        el.className = 'stat-trend ' + cls;
+        el.innerHTML = `<i class="fas ${icon}"></i> ${text}`;
+    }
+
+    async function loadStats() {
+        console.log('loadStats running');
+        try {
+            const data = await BookingStore.forMentor();
+            console.log('Bookings for stats:', data);
+
+            const now = new Date();
+            const prev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+            const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+            const inMonth = (b, ref) => {
+                const c = new Date(b.created_at);
+                return c.getFullYear() === ref.getFullYear() && c.getMonth() === ref.getMonth();
+            };
+
+            const students  = list => new Set(list
+                .filter(b => ['confirmed', 'completed'].includes(b.status))
+                .map(b => b.student_id || b.student_name)).size;
+            const upcoming  = list => list.filter(b => b.status === 'confirmed' && b.session_date && b.session_date >= today).length;
+            const completed = list => list.filter(b => b.status === 'completed').length;
+            const pending   = list => list.filter(b => b.status === 'pending').length;
+
+            const thisMonth = data.filter(b => inMonth(b, now));
+            const lastMonth = data.filter(b => inMonth(b, prev));
+
+            const cards = [
+                ['statStudents',  'trendStudents',  students],
+                ['statUpcoming',  'trendUpcoming',  upcoming],
+                ['statCompleted', 'trendCompleted', completed],
+                ['statPending',   'trendPending',   pending]
+            ];
+
+            cards.forEach(([numId, trendId, fn]) => {
+                document.getElementById(numId).textContent = fn(data).toLocaleString();
+                setTrend(trendId, fn(thisMonth), fn(lastMonth));
+            });
+        } catch (e) {
+            console.error('Could not load stats:', e);
+        }
+    }
+    async function loadSchedule() {
+        const listEl = document.getElementById('scheduleList');
+        if (!listEl) return;
+
+        try {
+            const data = await BookingStore.forMentor();
+
+            const now = new Date();
+            const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+            const upcoming = data
+                .filter(b => b.status === 'confirmed' && b.session_date && b.session_date >= today)
+                .sort((a, b) => (a.session_date + (a.start_time || '')).localeCompare(b.session_date + (b.start_time || '')))
+                .slice(0, 4);
+
+            listEl.innerHTML = '';
+
+            if (upcoming.length === 0) {
+                const empty = document.createElement('p');
+                empty.textContent = 'No upcoming sessions. Confirmed bookings will appear here.';
+                empty.style.cssText = 'color:#64748b;font-size:14px;padding:12px 0;';
+                listEl.appendChild(empty);
+                return;
+            }
+
+            const colours = ['green', 'gray', 'orange', 'red'];
+
+            upcoming.forEach((b, i) => {
+                const [y, m, d] = b.session_date.split('-').map(Number);
+                const date = new Date(y, m - 1, d);
+
+                const item = document.createElement('div');
+                item.className = 'schedule-item';
+
+                const box = document.createElement('div');
+                box.className = 'date-box ' + colours[i % colours.length];
+                const day = document.createElement('span');
+                day.className = 'day';
+                day.textContent = String(d).padStart(2, '0');
+                const month = document.createElement('span');
+                month.className = 'month';
+                month.textContent = date.toLocaleDateString('en-ZA', { month: 'short' });
+                box.append(day, month);
+
+                const info = document.createElement('div');
+                info.className = 'schedule-info';
+                const title = document.createElement('div');
+                title.className = 'title';
+                title.textContent = (b.session_type || 'Mentoring') + ' Session';
+                const student = document.createElement('div');
+                student.className = 'mentor';
+                student.textContent = b.student_name;
+                const time = document.createElement('div');
+                time.className = 'time';
+                time.textContent = (b.start_time || '').slice(0, 5) + ' - ' + (b.end_time || '').slice(0, 5);
+                info.append(title, student, time);
+
+                const status = document.createElement('div');
+                status.className = 'status online';
+                status.textContent = '• ' + (b.session_type || 'Online');
+
+                item.append(box, info, status);
+                listEl.appendChild(item);
+
+                if (i < upcoming.length - 1) {
+                    const divider = document.createElement('div');
+                    divider.className = 'horizontal-divider';
+                    listEl.appendChild(divider);
+                }
+            });
+        } catch (e) {
+            console.error('Could not load schedule:', e);
+        }
+    }
+    async function handleLogout() {
+        const confirmed = confirm('Are you sure you want to log out?');
+        if (!confirmed) return;
+
+        try {
+            await sb.auth.signOut();
+        } catch (e) {
+            console.error('Sign out failed:', e);
+        }
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('careerUser');
+        window.location.href = 'Home.html';
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', (e) => {
+        e.preventDefault();   // href="#" would otherwise jump to the top of the page
+        handleLogout();
+    });
     loadUserIntoDashboard();
     loadMentorPhoto();
-    loadUserIntoDashboard();
+    loadActivityData();
+    loadStats();
+    loadSchedule();
 </script>
 </body>
 </html>

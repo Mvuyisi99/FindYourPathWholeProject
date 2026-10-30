@@ -127,11 +127,13 @@ const BookingStore = {
 
 };
 
-/* Sidebar navigation for the mentor pages. Adjust file names to match yours. */
+/* Sidebar navigation for the mentor pages. */
 function initMentorNav() {
     const routes = {
         dashboard: 'MentorDashboard.html',
-        booking: 'MentorBookings.html'
+        booking: 'MentorBookings.html',
+        calendar: 'MentorCalendar.html',
+        settings: 'MentorSettings.html',
     };
     document.querySelectorAll('.sidebar li[data-nav]').forEach(li => {
         li.addEventListener('click', () => {
@@ -453,11 +455,15 @@ const PROFILE_AVATAR_COLUMNS = ['avatar_url', 'avatar', 'profile_picture', 'prof
 
 async function mentorPhotoUrl(mentorId) {
     try {
-        const { data } = await sb.from('profiles').select('*').eq('id', mentorId).maybeSingle();
-        if (!data) return null;
-        const col = PROFILE_AVATAR_COLUMNS.find(c => data[c]);
-        return col ? data[col] : null;
+        const { data: prof, error } = await sb.from('profiles')
+            .select('*')
+            .eq('id', mentorId)
+            .maybeSingle();
+        if (error || !prof) return null;
+        const col = PROFILE_AVATAR_COLUMNS.find(c => prof[c]);
+        return col ? prof[col] : null;
     } catch (e) {
+        console.error('mentorPhotoUrl failed:', e);
         return null;
     }
 }

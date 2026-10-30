@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mentor Calendar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="MentorDashboardStyleSheet.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .cal-card { background:#fff; border-radius:16px; padding:24px; box-shadow:0 2px 10px rgba(15,23,42,.06); max-width:1100px; }
+        .cal-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+        .cal-head h2 { margin:0; font-size:22px; color:#0f172a; }
+        .cal-nav { display:flex; gap:8px; }
+        .cal-nav button { border:1px solid #e2e8f0; background:#fff; border-radius:10px; padding:8px 14px; cursor:pointer; font-weight:600; color:#0f172a; }
+        .cal-nav button:hover { background:#f1f5f9; }
+        .cal-grid { display:grid; grid-template-columns:repeat(7, 1fr); gap:6px; }
+        .cal-dow { text-align:center; font-weight:700; font-size:13px; color:#64748b; padding:6px 0; }
+        .cal-cell { min-height:96px; border:1px solid #e2e8f0; border-radius:10px; padding:6px; background:#fff; overflow:hidden; }
+        .cal-cell.other { background:#f8fafc; opacity:.55; }
+        .cal-cell.today { border:2px solid #22b04b; }
+        .cal-day { font-size:13px; font-weight:700; color:#0f172a; margin-bottom:4px; }
+        .cal-chip { display:block; font-size:11.5px; font-weight:600; padding:3px 6px; border-radius:6px; margin-bottom:3px; text-decoration:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .cal-chip.confirmed { background:#dbeafe; color:#1d4ed8; }
+        .cal-chip.completed { background:#dcfce7; color:#15803d; }
+        .cal-legend { display:flex; gap:18px; margin-top:16px; font-size:13px; color:#475569; }
+        .cal-legend i { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; }
+        @media (max-width:800px) { .cal-cell { min-height:64px; } .cal-chip { font-size:10px; } }
+    </style>
+</head>
+<body>
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="logo-area" onclick="window.location.href='MentorDashboard.html'">
+            <img src="PROJECT 3 LOGO 2  3.png" alt="logo" class="logo-img" onerror="this.src='https://via.placeholder.com/38x38?text=FP'">
+            <div class="logo-text">Find<span class="green">Your</span>Path</div>
+        </div>
+
+        <div class="admin-card">
+            <img class="admin-avatar" id="calSidebarAvatar">
+            <div>
+                <div class="admin-name" id="sidebarName">Mentor</div>
+                <div class="admin-role" id="sidebarRole">Mentor</div>
+                <div class="admin-status"><span class="dot"></span> Online</div>
+            </div>
+        </div>
+
+        <ul>
+            <li data-nav="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
+            <li data-nav="users"><i class="fas fa-users"></i> Users</li>
+            <li data-nav="booking"><i class="far fa-calendar-alt"></i> Bookings</li>
+            <li class="active" data-nav="calendar"><i class="fas fa-calendar-days"></i> Calendar</li>
+            <li data-nav="sessions"><i class="fas fa-video"></i> Sessions</li>
+            <li data-nav="messages"><i class="far fa-comment-dots"></i> Messages</li>
+            <li data-nav="career"><i class="fas fa-briefcase"></i> Career Explorer</li>
+            <li data-nav="reports"><i class="fas fa-chart-line"></i> Report & Analytics</li>
+            <li data-nav="announcements"><i class="fas fa-bell"></i> Announcements</li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <div class="promo-card">
+                <img src="PROJECT 3 LOGO.png" alt="Promo" class="promo-img">
+                <div class="promo-text">Real guidance.<br>Local mentors.<br>Brighter futures.</div>
+            </div>
+        </div>
+    </aside>
+
+    <div class="main-area">
+        <header class="top-bar">
+            <div class="welcome-block">
+                <h1>Calendar</h1>
+                <p>Your confirmed and completed sessions.</p>
+            </div>
+            <div class="top-bar-right">
+                <div class="profile-preview">
+                    <img class="admin-avatar" id="calProfileAvatar" alt="profile">
+                    <div class="info">
+                        <div class="name" id="profileName">Mentor</div>
+                        <div class="role" id="profileRole">Mentor</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="page-content">
+            <div class="cal-card">
+                <div class="cal-head">
+                    <h2 id="calTitle"></h2>
+                    <div class="cal-nav">
+                        <button type="button" id="prevBtn" aria-label="Previous month"><i class="fas fa-chevron-left"></i></button>
+                        <button type="button" id="todayBtn">Today</button>
+                        <button type="button" id="nextBtn" aria-label="Next month"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div class="cal-grid" id="calGrid"></div>
+                <div class="cal-legend">
+                    <span><i style="background:#3b82f6"></i>Confirmed</span>
+                    <span><i style="background:#22b04b"></i>Completed</span>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabaseClient.js"></script>
+<script src="bookings.js"></script>
+<script>
+    initMentorNav();
+
+    const grid = document.getElementById('calGrid');
+    const titleEl = document.getElementById('calTitle');
+    const today = new Date();
+    let viewYear = today.getFullYear();
+    let viewMonth = today.getMonth();
+    let sessions = [];
+
+    const pad = n => String(n).padStart(2, '0');
+    const key = (y, m, d) => `${y}-${pad(m + 1)}-${pad(d)}`;
+
+    function render() {
+        titleEl.textContent = new Date(viewYear, viewMonth, 1)
+            .toLocaleDateString('en-ZA', { month: 'long', year: 'numeric' });
+        grid.innerHTML = '';
+
+        ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].forEach(d => {
+            const el = document.createElement('div');
+            el.className = 'cal-dow';
+            el.textContent = d;
+            grid.appendChild(el);
+        });
+
+        const offset = (new Date(viewYear, viewMonth, 1).getDay() + 6) % 7; // Monday start
+        const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+        const totalCells = Math.ceil((offset + daysInMonth) / 7) * 7;
+
+        for (let i = 0; i < totalCells; i++) {
+            const date = new Date(viewYear, viewMonth, 1 - offset + i);
+            const y = date.getFullYear(), m = date.getMonth(), d = date.getDate();
+            const k = key(y, m, d);
+
+            const cell = document.createElement('div');
+            cell.className = 'cal-cell';
+            if (m !== viewMonth) cell.classList.add('other');
+            if (k === key(today.getFullYear(), today.getMonth(), today.getDate())) cell.classList.add('today');
+
+            const num = document.createElement('div');
+            num.className = 'cal-day';
+            num.textContent = d;
+            cell.appendChild(num);
+
+            sessions
+                .filter(s => s.session_date === k)
+                .sort((a, b) => (a.start_time || '').localeCompare(b.start_time || ''))
+                .forEach(s => {
+                    const chip = document.createElement('a');
+                    chip.className = 'cal-chip ' + s.status;
+                    chip.href = 'MentorBookingDetails.html?id=' + encodeURIComponent(s.id);
+                    chip.textContent = (s.start_time || '').slice(0, 5) + ' ' + s.student_name;
+                    chip.title = s.student_name + ' (' + (s.session_type || '') + ') ' +
+                        (s.start_time || '').slice(0, 5) + ' - ' + (s.end_time || '').slice(0, 5);
+                    cell.appendChild(chip);
+                });
+
+            grid.appendChild(cell);
+        }
+    }
+
+    function shift(n) {
+        const d = new Date(viewYear, viewMonth + n, 1);
+        viewYear = d.getFullYear();
+        viewMonth = d.getMonth();
+        render();
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', () => shift(-1));
+    document.getElementById('nextBtn').addEventListener('click', () => shift(1));
+    document.getElementById('todayBtn').addEventListener('click', () => {
+        viewYear = today.getFullYear();
+        viewMonth = today.getMonth();
+        render();
+    });
+
+    async function load() {
+        try {
+            const all = await BookingStore.forMentor();
+            sessions = all.filter(b => ['confirmed', 'completed'].includes(b.status) && b.session_date);
+        } catch (e) {
+            console.error('Could not load calendar:', e);
+        }
+        render();
+    }
+
+    function loadUserIntoPage() {
+        const raw = localStorage.getItem('careerUser');
+        if (!raw) { window.location.href = 'Register.html'; return; }
+        const user = JSON.parse(raw);
+        const name = user.fullname || 'Mentor';
+        const role = user.role || 'Mentor';
+        document.getElementById('profileName').textContent = name;
+        document.getElementById('profileRole').textContent = role;
+        document.getElementById('sidebarName').textContent = name;
+        document.getElementById('sidebarRole').textContent = role;
+    }
+
+    async function loadMentorPhoto() {
+        const imgs = [
+            document.getElementById('calSidebarAvatar'),
+            document.getElementById('calProfileAvatar')
+        ].filter(Boolean);
+        try {
+            const { data } = await sb.auth.getUser();
+            if (!data || !data.user) return;
+            const raw = localStorage.getItem('careerUser');
+            const name = (raw && JSON.parse(raw).fullname) || 'Mentor';
+            const fallback = initialsAvatar(name);
+            const photo = await mentorPhotoUrl(data.user.id);
+            imgs.forEach(img => {
+                img.onerror = () => { img.onerror = null; img.src = fallback; };
+                img.src = photo || fallback;
+                img.alt = name;
+            });
+        } catch (e) {
+            console.error('Could not load profile picture:', e);
+        }
+    }
+
+    window.addEventListener('focus', load);
+    loadUserIntoPage();
+    loadMentorPhoto();
+    load();
+</script>
+</body>
+</html>

@@ -314,6 +314,24 @@
 			window.location.href = destination;
 		});
 	});
+	async function handleLogout() {
+		const confirmed = confirm('Are you sure you want to log out?');
+		if (!confirmed) return;
+
+		try {
+			await sb.auth.signOut();
+		} catch (e) {
+			console.error('Sign out failed:', e);
+		}
+		localStorage.removeItem('isLoggedIn');
+		localStorage.removeItem('careerUser');
+		window.location.href = 'Home.html';
+	}
+
+	document.getElementById('logoutBtn').addEventListener('click', (e) => {
+		e.preventDefault();
+		handleLogout();
+	});
 	document.querySelectorAll('.sidebar li').forEach(item => {
 		item.addEventListener('click', () => {
 			const navItem = item.dataset.nav;
@@ -323,11 +341,8 @@
 			if (navItem === 'dashboard') {
 				window.location.href = 'Dashboard.html';
 				return;
-			} else if (navItem === 'logout') {
-				const confirmed = confirm('Are you sure you want to log out?');
-				if (confirmed) {
-					window.location.href = 'Home.html';
-				}
+			}  else if (navItem === 'logout') {
+			handleLogout();
 			} else if (navItem === 'mentors') {
 				window.location.href = 'Mentors.html';
 				return;
