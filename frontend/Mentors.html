@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>FindYourPath — Mentors & Community</title>
-  <!-- Font Awesome for professional icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     * {
@@ -40,7 +39,6 @@
       cursor: pointer;
     }
 
-    /* Top navbar logo - smaller size */
     .logo-img {
       width: 38px;
       height: 38px;
@@ -180,7 +178,6 @@
       color: #5b6e8c;
     }
 
-    /* Dropdown menu */
     .dropdown-menu {
       position: absolute;
       top: 50px;
@@ -265,7 +262,6 @@
       background-color: #f1f5f9;
     }
 
-    /* Sidebar footer with BIGGER logo */
     .sidebar-footer {
       margin-top: 40px;
       padding: 20px 12px;
@@ -280,7 +276,6 @@
       background: #eef2ff;
     }
 
-    /* BIGGER logo in sidebar footer - 80px instead of 38px */
     .footer-logo {
       width: 80px;
       height: 80px;
@@ -310,7 +305,6 @@
       background: #f8fafc;
     }
 
-    /* Both tabs have the SAME styling now */
     .tabs-header {
       display: flex;
       gap: 12px;
@@ -421,7 +415,6 @@
       border-color: #2e7d32;
     }
 
-    /* Toast notification */
     .toast {
       position: fixed;
       bottom: 30px;
@@ -552,7 +545,6 @@
       <li data-nav="logout"><i class="fas fa-sign-out-alt"></i> Log out</li>
     </ul>
 
-    <!-- Sidebar footer with BIGGER logo (80px) above the text -->
     <div class="sidebar-footer" id="aboutFooter">
       <img src="PROJECT.png" alt="logo" class="footer-logo" onerror="this.src='https://via.placeholder.com/80x80?text=FP'">
       <div class="footer-text">
@@ -575,266 +567,238 @@
   </div>
 </div>
 
-<script>
-  // Mentor data
-  const mentors = [
-    { id: 1, name: "Mduduzi Zwane", role: "Manager | First National Bank", location: "Johannesburg", img: "https://randomuser.me/api/portraits/men/32.jpg", cover: "https://picsum.photos/id/88/400/150", followed: false },
-    { id: 2, name: "Aron Smith", role: "HR Employee | Luno | Cape Town", location: "Cape Town", img: "https://randomuser.me/api/portraits/men/45.jpg", cover: "https://picsum.photos/id/26/400/150", followed: false },
-    { id: 3, name: "Asiphe Dosi", role: "Lecturer | University of Kwazulu Natal", location: "Durban", img: "https://randomuser.me/api/portraits/women/50.jpg", cover: "https://picsum.photos/id/20/400/150", followed: false },
-    { id: 4, name: "Jessica Motaung", role: "Assistant Coach | University of western Cape", location: "Cape Town", img: "https://randomuser.me/api/portraits/women/65.jpg", cover: "https://picsum.photos/id/133/400/150", followed: false },
-    { id: 5, name: "Klyan Shane", role: "Software Developer | Durban", location: "Durban", img: "https://randomuser.me/api/portraits/men/75.jpg", cover: "https://picsum.photos/id/106/400/150", followed: false },
-    { id: 6, name: "Angelo Author", role: "Fashion designer | Port Elizabeth", location: "Port Elizabeth", img: "https://randomuser.me/api/portraits/women/22.jpg", cover: "https://picsum.photos/id/36/400/150", followed: false }
-  ];
+<script type="module">
+// import { supabase } from './supabaseClient.js';
+import { supabase } from './supabaseClientModule.js';
 
-  let followingList = JSON.parse(localStorage.getItem('following')) || [];
-  let currentFilter = 'all';
-  let currentSearch = '';
+// ---------- state ----------
+let allMentors   = [];          // [{id, full_name, avatar_url}]
+let followingSet = new Set();   // set of mentor ids I follow
+let currentFilter = 'all';
+let currentSearch = '';
+let me = null;
 
-  // Load following status
-  mentors.forEach(mentor => {
-    mentor.followed = followingList.includes(mentor.id);
-  });
+// ---------- helpers ----------
+function showToast(message, isError = false) {
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.style.background = isError ? '#dc2626' : '#2e7d32';
+  t.textContent = message;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2000);
+}
 
-  // Show toast notification
-  function showToast(message, isError = false) {
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.style.background = isError ? '#dc2626' : '#2e7d32';
-    toast.textContent = message;
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 2000);
-  }
+// ---------- data ----------
+async function loadData() {
+  const { data: { user } } = await supabase.auth.getUser();
+  me = user;
 
-  // Render mentors
-  function renderMentors() {
-    let filtered = [...mentors];
+  // 1. Load mentor profiles
+  const { data: mentors, error: mErr } = await supabase
+    .from('profiles')
+    .select('id, full_name, avatar_url, role')
+    .eq('role', 'mentor')
+    .order('full_name');
 
-    if (currentFilter === 'following') {
-      filtered = filtered.filter(m => m.followed);
-    }
+  if (mErr) { console.error(mErr); showToast('Failed to load mentors', true); return; }
+  allMentors = mentors || [];
 
-    if (currentSearch) {
-      filtered = filtered.filter(m =>
-              m.name.toLowerCase().includes(currentSearch.toLowerCase()) ||
-              m.role.toLowerCase().includes(currentSearch.toLowerCase())
-      );
-    }
+  // 2. Load my connections (where I am the student)
+    // 2. Load my connections (where I am the student)
+  followingSet = new Set();
+  if (me) {
+    const { data: connections, error: cErr } = await supabase
+      .from('connections')
+      .select('mentor_id, status')
+      .eq('student_id', me.id);
 
-    const grid = document.getElementById('mentorsGrid');
-
-    if (filtered.length === 0) {
-      grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px; color: #5b6e8c;">
-        <i class="fas fa-user-friends" style="font-size: 48px; margin-bottom: 16px; display: block;"></i>
-        <p>No mentors found</p>
-        <p style="font-size: 0.85rem; margin-top: 8px;">Try adjusting your search or filter</p>
-      </div>`;
-      return;
-    }
-
-    grid.innerHTML = filtered.map(mentor => `
-      <div class="card" data-mentor-id="${mentor.id}">
-        <div class="card-cover" style="background-image: url('${mentor.cover}'); background-size: cover;"></div>
-        <div class="avatar-wrapper">
-          <img src="${mentor.img}" alt="${mentor.name}">
-        </div>
-        <div class="card-info">
-          <h3>${mentor.name}</h3>
-          <div class="job-title">${mentor.role}</div>
-          <button class="follow-button" data-id="${mentor.id}" data-followed="${mentor.followed}">
-            ${mentor.followed ? 'Following ✓' : 'Follow'}
-          </button>
-        </div>
-      </div>
-    `).join('');
-
-    // Attach follow button events
-    document.querySelectorAll('.follow-button').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const id = parseInt(btn.dataset.id);
-        const mentor = mentors.find(m => m.id === id);
-
-        if (mentor.followed) {
-          mentor.followed = false;
-          followingList = followingList.filter(fid => fid !== id);
-          showToast(`Unfollowed ${mentor.name}`, true);
-        } else {
-          mentor.followed = true;
-          followingList.push(id);
-          showToast(`Following ${mentor.name} ✅`);
-        }
-
-        localStorage.setItem('following', JSON.stringify(followingList));
-        renderMentors();
-        updateFollowingCount();
-      });
-    });
-  }
-
-  // Update following tab badge or state
-  function updateFollowingCount() {
-    const followingCount = mentors.filter(m => m.followed).length;
-    const followingBtn = document.getElementById('followingTab');
-    if (followingCount > 0) {
-      followingBtn.textContent = `Following (${followingCount})`;
-    } else {
-      followingBtn.textContent = 'Finding';
+    if (cErr) { console.error(cErr); }
+    else { 
+      // ONLY add to the list if the mentor accepted it
+      followingSet = new Set(
+        (connections || [])
+          .filter(c => c.status === 'accepted' || c.status === 'approved')
+          .map(c => c.mentor_id)
+      ); 
     }
   }
 
-  // Search functionality
-  document.getElementById('searchInput').addEventListener('input', (e) => {
-    currentSearch = e.target.value;
-    renderMentors();
-  });
-
-  document.getElementById('allTab').addEventListener('click', () => {
-    currentFilter = 'all';
-    document.getElementById('allTab').classList.add('primary');
-    document.getElementById('allTab').classList.remove('secondary');
-    document.getElementById('followingTab').classList.add('secondary');
-    document.getElementById('followingTab').classList.remove('primary');
-    renderMentors();
-  });
-
-  document.getElementById('followingTab').addEventListener('click', () => {
-    currentFilter = 'following';
-    document.getElementById('followingTab').classList.add('primary');
-    document.getElementById('followingTab').classList.remove('secondary');
-    document.getElementById('allTab').classList.add('secondary');
-    document.getElementById('allTab').classList.remove('primary');
-    renderMentors();
-  });
-
-  const profileBtn = document.getElementById('profileBtn');
-  const dropdown = document.getElementById('dropdownMenu');
-
-  profileBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    dropdown.classList.toggle('show');
-  });
-
-  document.addEventListener('click', () => {
-    dropdown.classList.remove('show');
-  });
-
-  // Logout functionality
-  document.getElementById('logoutBtn').addEventListener('click', (e) => {
-    e.preventDefault();
-    showToast('Logged out successfully');
-    setTimeout(() => {
-      alert('You have been logged out. Click OK to refresh the page.');
-      window.location.reload();
-    }, 500);
-  });
-
-  // Notification click
-  document.getElementById('notificationBtn').addEventListener('click', () => {
-    showToast('🔔 You have 3 new notifications');
-    document.getElementById('notificationBadge').style.display = 'none';
-  });
-
-  // Message click
-  document.getElementById('messageBtn').addEventListener('click', () => {
-    showToast('💬 No new messages');
-  });
-
-  // Sidebar navigation
-  document.querySelectorAll('.sidebar li').forEach(item => {
-    item.addEventListener('click', () => {
-      const navItem = item.dataset.nav;
-      document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
-      item.classList.add('active');
-
-      if (navItem === 'dashboard') {
-        window.location.href = 'Dashboard.html';
-        return;
-      } else if (navItem === 'logout') {
-        const confirmed = confirm('Are you sure you want to log out?');
-        if (confirmed) {
-          window.location.href = 'Home.html';
-        }
-      } else if (navItem === 'mentors') {
-        window.location.href = 'Mentors.html';
-        return;
-      } else if (navItem === 'messages') {
-        window.location.href = 'Messages.html';
-        return;
-      } else if (navItem === 'booking') {
-        window.location.href = 'Booking.html';
-        return;
-      } else if (navItem === 'encouragement') {
-        window.location.href = 'EncouragementWall.html';
-        return;
-      } else if (navItem === 'experiances') {
-        window.location.href = 'ExperianceWall.html';
-      } else if (navItem === 'settings') {
-        window.location.href = 'Settings.html';
-        return;
-      } else if (navItem === 'help') {
-        window.location.href = 'HelpAndSupport.html';
-      }
-    });
-  });
-
-  // Top navigation
-  document.querySelectorAll('.nav-middle a').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const page = link.dataset.page;
-
-      if (page === 'home') {
-        window.location.href = 'Dashboard.html';
-        return;
-      }
-      if (page === 'mentor') {
-        window.location.href = 'Mentors.html';
-        return;
-      }
-      if (page === 'encouragement') {
-        window.location.href = 'EncouragementWall.html';
-        return;
-      }
-
-      document.querySelectorAll('.nav-middle a').forEach(l => l.classList.remove('active'));
-      link.classList.add('active');
-
-      if (page === 'mentor') {
-        showToast('Welcome to FindYourPath!');
-      } else {
-        showToast(`${page.charAt(0).toUpperCase() + page.slice(1)} page coming soon!`);
-      }
-    });
-  });
-
-  // Card click to view mentor details
-  document.getElementById('mentorsGrid').addEventListener('click', (e) => {
-    const card = e.target.closest('.card');
-    if (card && !e.target.classList.contains('follow-button')) {
-      const mentorId = card.dataset.mentorId;
-      const mentor = mentors.find(m => m.id == mentorId);
-      if (mentor) {
-        showToast(`Viewing ${mentor.name}'s profile - Coming soon!`);
-      }
-    }
-  });
-
-  // About footer click
-  document.getElementById('aboutFooter').addEventListener('click', () => {
-    showToast('✨ FindYourPath - Connecting youth with local mentors');
-  });
-
-  // Initial render
   renderMentors();
   updateFollowingCount();
+}
 
-  // Demo: auto-save notification badge
-  let notificationCount = 3;
-  setInterval(() => {
-    if (notificationCount > 0 && document.getElementById('notificationBadge').style.display !== 'none') {
-      // Just a demo - doesn't auto-increment
+// ---------- render ----------
+function renderMentors() {
+  const grid = document.getElementById('mentorsGrid');
+
+  let filtered = [...allMentors];
+
+  if (currentFilter === 'following') {
+    filtered = filtered.filter(m => followingSet.has(m.id));
+  }
+  if (currentSearch) {
+    const q = currentSearch.toLowerCase();
+    filtered = filtered.filter(m => m.full_name.toLowerCase().includes(q));
+  }
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:60px;color:#5b6e8c;">
+        <i class="fas fa-user-friends" style="font-size:48px;margin-bottom:16px;display:block;"></i>
+        <p>${currentFilter === 'following' ? 'You are not connected to any mentors yet.' : 'No mentors found.'}</p>
+        ${currentFilter === 'following' ? `<p style="font-size:.85rem;margin-top:8px;">Switch to “All” and click Connect.</p>` : ''}
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(m => {
+    const following = followingSet.has(m.id);
+    const avatar = m.avatar_url || 'https://via.placeholder.com/78';
+    const cover  = 'https://picsum.photos/id/88/400/150';
+    
+    // Get my name from the local storage (saved during login) or from the DB
+    const myProfile = JSON.parse(localStorage.getItem('careerUser') || '{}');
+    const myName = myProfile.fullname || 'A Student';
+
+    return `
+      <div class="card" data-mentor-id="${m.id}">
+        <div class="card-cover" style="background-image:url('${cover}');background-size:cover;"></div>
+        <div class="avatar-wrapper">
+          <img src="${avatar}" alt="${m.full_name}">
+        </div>
+        <div class="card-info">
+          <h3>${m.full_name}</h3>
+          <div class="job-title">Mentor</div>
+          <button class="follow-button" data-id="${m.id}" data-name="${m.full_name}">
+            ${following ? 'Connected ✓' : 'Connect'}
+          </button>
+        </div>
+      </div>`;
+  }).join('');
+
+  // Attach follow handlers
+  grid.querySelectorAll('.follow-button').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      if (!me) { showToast('Please sign in first', true); return; }
+      
+      const id = btn.dataset.id;
+      const wasFollowing = followingSet.has(id);
+      btn.disabled = true;
+
+      // Get my profile name (fallback to email prefix if missing)
+      const myProfile = JSON.parse(localStorage.getItem('careerUser') || '{}');
+      const myName = myProfile.fullname || me.email.split('@')[0];
+
+      if (wasFollowing) {
+        // UNFOLLOW (Delete connection)
+        const { error } = await supabase
+          .from('connections')
+          .delete()
+          .eq('student_id', me.id)
+          .eq('mentor_id', id);
+          
+        if (error) { console.error(error); showToast('Failed to disconnect', true); }
+        else { followingSet.delete(id); showToast('Disconnected', true); }
+      } else {
+        // FOLLOW (Insert connection)
+        const { error } = await supabase
+          .from('connections')
+          .insert({ 
+            student_id: me.id, 
+            mentor_id: id,
+            student_name: myName,
+            status: 'pending' // or 'accepted', depending on your teammate's flow
+          });
+          
+        if (error) { console.error(error); showToast('Failed to connect', true); }
+        else { followingSet.add(id); showToast('Connection request sent ✅'); }
+      }
+
+      btn.disabled = false;
+      renderMentors();
+      updateFollowingCount();
+    });
+  });
+}
+
+function updateFollowingCount() {
+  const btn = document.getElementById('followingTab');
+  const n = followingSet.size;
+  btn.textContent = n > 0 ? `Following (${n})` : 'Following';
+}
+
+// ---------- filters ----------
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  currentSearch = e.target.value;
+  renderMentors();
+});
+
+document.getElementById('allTab').addEventListener('click', () => {
+  currentFilter = 'all';
+  document.getElementById('allTab').classList.add('primary');
+  document.getElementById('allTab').classList.remove('secondary');
+  document.getElementById('followingTab').classList.add('secondary');
+  document.getElementById('followingTab').classList.remove('primary');
+  renderMentors();
+});
+
+document.getElementById('followingTab').addEventListener('click', () => {
+  currentFilter = 'following';
+  document.getElementById('followingTab').classList.add('primary');
+  document.getElementById('followingTab').classList.remove('secondary');
+  document.getElementById('allTab').classList.add('secondary');
+  document.getElementById('allTab').classList.remove('primary');
+  renderMentors();
+});
+
+// ---------- nav / dropdown (unchanged behavior) ----------
+const profileBtn = document.getElementById('profileBtn');
+const dropdown   = document.getElementById('dropdownMenu');
+profileBtn.addEventListener('click', (e) => { e.stopPropagation(); dropdown.classList.toggle('show'); });
+document.addEventListener('click', () => dropdown.classList.remove('show'));
+
+document.getElementById('notificationBtn').addEventListener('click', () => {
+  showToast('🔔 You have 3 new notifications');
+  document.getElementById('notificationBadge').style.display = 'none';
+});
+document.getElementById('messageBtn').addEventListener('click', () => showToast('💬 No new messages'));
+
+document.querySelectorAll('.sidebar li').forEach(item => {
+  item.addEventListener('click', () => {
+    const nav = item.dataset.nav;
+    document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
+    item.classList.add('active');
+    const map = {
+      dashboard: 'Dashboard.html', messages: 'Messages.html', booking: 'Booking.html',
+      mentors: 'Mentors.html', encouragement: 'EncouragementWall.html',
+      experiances: 'ExperianceWall.html', settings: 'Settings.html', help: 'HelpAndSupport.html'
+    };
+    if (nav === 'logout') {
+      if (confirm('Are you sure you want to log out?')) window.location.href = 'Home.html';
+    } else if (map[nav]) {
+      window.location.href = map[nav];
     }
-  }, 5000);
+  });
+});
+
+document.querySelectorAll('.nav-middle a').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const page = link.dataset.page;
+    const map = {
+      home: 'Dashboard.html', mentor: 'Mentors.html',
+      encouragement: 'EncouragementWall.html', resources: 'InformationTechnology.html'
+    };
+    if (map[page]) window.location.href = map[page];
+  });
+});
+
+document.getElementById('aboutFooter').addEventListener('click', () =>
+  showToast('✨ FindYourPath - Connecting youth with local mentors'));
+
+// ---------- boot ----------
+loadData();
 </script>
 
 </body>
