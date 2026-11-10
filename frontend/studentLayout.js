@@ -1,36 +1,4 @@
-/* =====================================================================
-   studentLayout.js
-   ONE script for every student page (FindYourPath).
-   Provides: top nav bar, sidebar, profile name/photo, message and
-   notification badges, logout, and the "Welcome back" title.
-   It also loads studentLayout.css automatically (same folder).
 
-   USAGE (every student page):
-
-     <head>
-       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-       <link rel="stylesheet" href="YourPageStyleSheet.css">
-       <script src="studentLayout.js"></script>
-     </head>
-     <body>
-       <student-header active-page="home"></student-header>
-       <div class="main-layout">
-         <student-sidebar active="dashboard"></student-sidebar>
-         ...page content...
-       </div>
-
-       <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-       <script src="supabaseClient.js"></script>
-     </body>
-
-   <student-header> attributes
-     active-page = home | mentor | encouragement | resources
-     no-search   (hides the search box)
-
-   <student-sidebar> attributes
-     active = dashboard | messages | booking | mentors | encouragement |
-              experiences | settings | help
-   ===================================================================== */
 
 (function () {
     'use strict';
@@ -45,9 +13,6 @@
 
     const AVATAR_COLUMNS = ['avatar_url', 'avatar', 'profile_picture', 'profile_image', 'photo_url', 'image_url'];
 
-    /* ---------------------------------------------------------------
-       Load the shared CSS from the same folder as this script
-       --------------------------------------------------------------- */
 
     /* Top navigation links */
     const TOP_LINKS = [
@@ -57,7 +22,6 @@
         { key: 'resources', label: 'Resources', href: 'InformationTechnology.html' }
     ];
 
-    /* Sidebar items. href === null means "run the logout flow". */
     const SIDE_ITEMS = [
         { key: 'dashboard', icon: 'fas fa-tachometer-alt', label: 'Dashboard', href: 'Dashboard.html' },
         { key: 'messages', icon: 'far fa-envelope', label: 'Messages', href: 'Messages.html' },
@@ -70,9 +34,6 @@
         { key: 'logout', icon: 'fas fa-sign-out-alt', label: 'Log out', href: null }
     ];
 
-    /* ---------------------------------------------------------------
-       Helpers
-       --------------------------------------------------------------- */
     function getStoredUser() {
         try {
             return JSON.parse(localStorage.getItem('careerUser'));
@@ -81,7 +42,6 @@
         }
     }
 
-    // Round placeholder picture with the person's initials (data URI)
     function initialsAvatar(name) {
         const initials = (name || '').trim().split(/\s+/).filter(Boolean)
             .map(w => w[0]).join('').slice(0, 2).toUpperCase() || '?';
@@ -96,7 +56,6 @@
         return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
     }
 
-    // supabaseClient.js loads at the bottom of the page, so wait for it
     function whenSupabase(cb, tries) {
         if (tries === undefined) tries = 50;
         const client = (typeof sb !== 'undefined') ? sb : window.sb;
@@ -117,12 +76,8 @@
         localStorage.removeItem('careerUser');
         window.location.href = LOGOUT_REDIRECT;
     }
-    // Other scripts on the page may call handleLogout()
     window.handleLogout = handleLogout;
 
-    /* ---------------------------------------------------------------
-       HEADER (top navigation bar)
-       --------------------------------------------------------------- */
     class StudentHeader extends HTMLElement {
         connectedCallback() {
             const activePage = this.getAttribute('active-page') || '';
@@ -357,9 +312,6 @@
         }
     }
 
-    /* ---------------------------------------------------------------
-       SIDEBAR
-       --------------------------------------------------------------- */
     class StudentSidebar extends HTMLElement {
         connectedCallback() {
             const active = this.getAttribute('active') || '';

@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="MentorDashboardStyleSheet.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="mentorSidebar.js"></script>
+    <script src="mentorHeader.js"></script>
+    
     <style>
         .cal-card { background:#fff; border-radius:16px; padding:24px; box-shadow:0 2px 10px rgba(15,23,42,.06); max-width:1100px; }
         .cal-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
@@ -29,60 +32,10 @@
 </head>
 <body>
 <div class="app-layout">
-    <aside class="sidebar">
-        <div class="logo-area" onclick="window.location.href='MentorDashboard.html'">
-            <img src="PROJECT 3 LOGO 2  3.png" alt="logo" class="logo-img" onerror="this.src='https://via.placeholder.com/38x38?text=FP'">
-            <div class="logo-text">Find<span class="green">Your</span>Path</div>
-        </div>
-
-        <div class="admin-card">
-            <img class="admin-avatar" id="calSidebarAvatar">
-            <div>
-                <div class="admin-name" id="sidebarName">Mentor</div>
-                <div class="admin-role" id="sidebarRole">Mentor</div>
-                <div class="admin-status"><span class="dot"></span> Online</div>
-            </div>
-        </div>
-
-        <ul>
-            <li data-nav="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
-            <li data-nav="users"><i class="fas fa-users"></i> Users</li>
-            <li data-nav="booking"><i class="far fa-calendar-alt"></i> Bookings</li>
-            <li class="active" data-nav="calendar"><i class="fas fa-calendar-days"></i> Calendar</li>
-            <li data-nav="messages"><i class="far fa-comment-dots"></i> Messages</li>
-            <li data-nav="settings"><i class="fas fa-cog"></i> Settings</li>
-        </ul>
-
-        <div class="sidebar-footer">
-            <div class="promo-card">
-                <img src="PROJECT 3 LOGO.png" alt="Promo" class="promo-img">
-                <div class="promo-text">Real guidance.<br>Local mentors.<br>Brighter futures.</div>
-            </div>
-        </div>
-    </aside>
+    <mentor-sidebar active="calendar"></mentor-sidebar>
 
     <div class="main-area">
-        <header class="top-bar">
-            <div class="welcome-block">
-                <h1>Calendar</h1>
-                <p>Your confirmed and completed sessions.</p>
-            </div>
-            <div class="top-bar-right">
-                <div class="profile-preview" id="profileBtn">
-                    <img class="admin-avatar" id="calProfileAvatar" alt="profile">
-                    <div class="info">
-                        <div class="name" id="profileName">Mentor</div>
-                        <div class="role" id="profileRole">Mentor</div>
-                    </div>
-                    <i class="fas fa-chevron-down arrow-down"></i>
-
-                    <div class="dropdown-menu" id="dropdownMenu">
-                        <a href="MentorSettings.html"><i class="fas fa-user"></i> My Profile</a>
-                        <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Log out</a>
-                    </div>
-                </div>
-            </div>
-        </header>
+        <mentor-header title="Calendar" subtitle="Manage your sessions"></mentor-header>
 
         <main class="page-content">
             <div class="cal-card">
