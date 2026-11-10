@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="mentorSidebar.js"></script>
     <script src="mentorHeader.js"></script>
-    
+
     <style>
         .cal-card { background:#fff; border-radius:16px; padding:24px; box-shadow:0 2px 10px rgba(15,23,42,.06); max-width:1100px; }
         .cal-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
@@ -62,8 +62,9 @@
 <script src="bookings.js"></script>
 <script src="mentorSearch.js"></script>
 <script>
+    // <mentor-header> handles the profile dropdown, logout, name/role/photo,
+    // notifications and the search box, so none of that is repeated here.
     initMentorNav();
-    initMentorSearch();
 
     const grid = document.getElementById('calGrid');
     const titleEl = document.getElementById('calTitle');
@@ -148,77 +149,7 @@
         render();
     }
 
-    function loadUserIntoPage() {
-        const raw = localStorage.getItem('careerUser');
-        if (!raw) { window.location.href = 'Register.html'; return; }
-        const user = JSON.parse(raw);
-        const name = user.fullname || 'Mentor';
-        const role = user.role || 'Mentor';
-        document.getElementById('profileName').textContent = name;
-        document.getElementById('profileRole').textContent = role;
-        document.getElementById('sidebarName').textContent = name;
-        document.getElementById('sidebarRole').textContent = role;
-    }
-
-    async function loadMentorPhoto() {
-        const imgs = [
-            document.getElementById('calSidebarAvatar'),
-            document.getElementById('calProfileAvatar')
-        ].filter(Boolean);
-        try {
-            const { data } = await sb.auth.getUser();
-            if (!data || !data.user) return;
-            const raw = localStorage.getItem('careerUser');
-            const name = (raw && JSON.parse(raw).fullname) || 'Mentor';
-            const fallback = initialsAvatar(name);
-            const photo = await mentorPhotoUrl(data.user.id);
-            imgs.forEach(img => {
-                img.onerror = () => { img.onerror = null; img.src = fallback; };
-                img.src = photo || fallback;
-                img.alt = name;
-            });
-        } catch (e) {
-            console.error('Could not load profile picture:', e);
-        }
-    }
-    // Profile dropdown
-    const profileBtn = document.getElementById('profileBtn');
-    const dropdown = document.getElementById('dropdownMenu');
-
-    if (profileBtn && dropdown) {
-        profileBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            dropdown.classList.toggle('show');
-        });
-
-        document.addEventListener('click', () => {
-            dropdown.classList.remove('show');
-        });
-    }
-
-    // Logout
-    async function handleLogout() {
-        const confirmed = confirm('Are you sure you want to log out?');
-        if (!confirmed) return;
-
-        try {
-            await sb.auth.signOut();
-        } catch (e) {
-            console.error('Sign out failed:', e);
-        }
-        localStorage.removeItem('isLoggedIn');
-        localStorage.removeItem('careerUser');
-        window.location.href = 'Home.html';
-    }
-
-    document.getElementById('logoutBtn')?.addEventListener('click', (e) => {
-        e.preventDefault();
-        handleLogout();
-    });
-
     window.addEventListener('focus', load);
-    loadUserIntoPage();
-    loadMentorPhoto();
     load();
 </script>
 </body>
